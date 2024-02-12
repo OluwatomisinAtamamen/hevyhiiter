@@ -1,5 +1,5 @@
 {
-  "name": "cook_ur_hiit",
+  "name": "hevyhiiter",
   "version": "1.0.0",
   "description": "A webapp for creating customisable HIIT workouts.",
   "main": "server.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OluwatomisinAtamamen/cook_ur_hiit.git"
+    "url": "git+https://github.com/OluwatomisinAtamamen/hevyhiiter.git"
   },
   "author": "up2136848",
   "license": "ISC",

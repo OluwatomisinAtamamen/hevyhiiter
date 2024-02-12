@@ -1,0 +1,23 @@
+#log_in {
+    display: none;
+}
+
+#log_in.show {
+    display: block;
+}
+
+#sign_up {
+    display: none;
+}
+
+#sign_up.show {
+    display: block;
+}
+
+#introPage.hide {
+    display: none;
+}
+
+#introPage {
+    display: block;
+}
