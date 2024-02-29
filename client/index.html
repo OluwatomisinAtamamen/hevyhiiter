@@ -3,71 +3,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
     <title>HevyHIITer</title>
+    <link rel="stylesheet" href="style\index.css">
 </head>
-<link rel="stylesheet" href="style\introPage.css">
-<script src="scripts\main.mjs" ></script>
+<script defer src="scripts\script.mjs" ></script>
 
-<body>
-    <div class="intro">
-        <div class="introText">
-            <h1>HevyHIITer</h1>
-            <p>Transform Your Fitness Journey</p>
-            <p>Craft personalised HIIT workout tailored to your goals, accompanied by dynamic exercises and empowering progress tracking, to reach your fitness peak</p>
-        </div>
+<main>
+    <header>HevyHIITer</header>
+    <!-- <section id="intro">
+        <p class="quote">Transform Your Fitness Journey</p>
+        <p class="quote">Craft personalised HIIT workout tailored to your goals, accompanied by dynamic exercises and empowering progress tracking, to reach your fitness peak!</p>
+    
 
-        <div>
+        <section>
             <button id="demoBtn">See how it works!</button>
-        </div>
+        </section>
 
-        <div class="authBtn">
-            <button id="login">Login</button>
-            <button id="signup">Sign Up</button>
-        </div>
+        <section id="authBtn">
+            <button id="profileBtn">Create User Profile</button>
+        </section>
+    </section>
 
-        <div class="log_in">
-            <form id="login_form">
-                <input type="text" id="username" placeholder="Username" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <button type="submit">Login</button>
-            </form>
-        </div>
-
-        <div class="sign_up">
-            <form id="signup_form">
-                <input type="text" id="username" placeholder="Username" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <input type="password" id="confirm_password" placeholder="Confirm Password" required>
-                <button type="submit">Sign Up</button>
-            </form>
-        </div>
-
-        <div class="workout_demo">
-            <h2>Create Workout</h2>
+    <section id="workoutDemo">
+        <h2>Create Workout</h2>
+        <form class="demoForm">
+            <input type="text" id="workoutName" placeholder="Edit Workout Name" required>
             <p>Choose Exercises</p>
-            <select id="exercise_demo">
-                <option value="full_body">Full Body</option>
+            <select id="exerciseDemo">
+                <option value="full_body" title="This is the description for Option 1">Full Body</option>
                 <option value="upper_body">Upper Body</option>
                 <option value="lower_body">Lower Body</option>
                 <option value="core">Core</option>
             </select>
-        </div>
-    </div>
-
-    <div class="log_in">
-        <form id="login_form">
-            <input type="text" id="username" placeholder="Username" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit">Login</button>
+            <p id="demoDesc">Description: </p>
         </form>
-    </div>
+    </section> -->
 
-    <div class="sign_up">
-        <form id="signup_form">
-            <input type="text" id="username" placeholder="Username" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <input type="password" id="confirm_password" placeholder="Confirm Password" required>
-            <button type="submit">Sign Up</button>
-        </form>
-    </div>
-</body>
+    <section class="home">
+        <button id="createBtn">Create New Workout</button>
+        <h2>Saved Workouts</h2>
+    </section>
+
+    <section class="createWorkouts">
+        <input type="text" id="workoutName" placeholder="Edit Workout Name" required>
+        <p>Choose Exercises</p>
+        <select id="exerciseDemo">
+            <option value="full_body" title="This is the description for Option 1">Full Body</option>
+            <option value="upper_body">Upper Body</option>
+            <option value="lower_body">Lower Body</option>
+            <option value="core">Core</option>
+        </select>
+        <p id="demoDesc">Description: </p>
+    </section>
+
+    <section class="profile">
+
+    </section>
+    
+    <section class="session">
+
+    </section>
+
+    <section class="measures">
+
+    </section>
+</main>
 </html>
