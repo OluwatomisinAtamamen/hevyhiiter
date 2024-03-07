@@ -34,3 +34,11 @@ button {
     color: white; /* Change the text color of the buttons to white */
     border-radius: 10px; /* Add curved edges to the buttons */
 }
+
+.hide{
+    display: none;
+}
+
+.show{
+    display: block;
+}

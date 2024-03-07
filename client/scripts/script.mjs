@@ -1,23 +1,30 @@
-function addHandlers(){
-  const firstloginBtn = document.querySelector('#login');
-  firstloginBtn.addEventListener('click', loginHandler);
+const global = {};
 
-  const firstsignupBtn = document.querySelector('#signup');
-  firstsignupBtn.addEventListener('click', signupHandler);
+function createWorkout() {
+  global.createSec.classList.remove('hide');
+  global.createSec.classList.add('show');
+  global.workoutName.focus();
+  
 }
 
-function loginHandler(){
-  const introSec = document.querySelector('#intro');
-  const loginSec = document.querySelector('#log_in');
-  introSec.classList.add('hide');
-  loginSec.classList.add('show');
+function prepareHandles() {
+  global.createBtn = document.querySelector('#createBtn');
+  global.createSec = document.querySelector('.createWorkout');
+  global.workoutName = document.querySelector('#workoutName');
 }
 
-function signupHandler(){
-  const introSec = document.querySelector('#intro');
-  const signupSec = document.querySelector('#sign_up');
-  introSec.classList.add('hide');
-  signupSec.classList.add('show');
+function addEventListeners() {
+  global.createBtn.addEventListener('click', createWorkout);
 }
 
-window.addEventListener('load', addHandlers);
+function loadSavedWorkouts() {
+
+}
+
+function pageLoaded() {
+  prepareHandles();
+  addEventListeners();
+  loadSavedWorkouts();
+}
+
+window.addEventListener('load', pageLoaded);
