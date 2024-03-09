@@ -10,8 +10,6 @@
 <main>
     <header>HevyHIITer</header>
     <!-- <section id="intro">
-        <p class="quote">Transform Your Fitness Journey</p>
-        <p class="quote">Craft personalised HIIT workout tailored to your goals, accompanied by dynamic exercises and empowering progress tracking, to reach your fitness peak!</p>
     
 
         <section>
@@ -38,12 +36,12 @@
         </form>
     </section> -->
 
-    <section class="home">
+    <section class="homeSec hide">
         <button id="createBtn">Create New Workout</button>
         <section class="createWorkout hide">
             <input type="text" id="workoutName" placeholder="Edit Workout Name" required>
             <p>Choose Exercises</p>
-            <select id="exerciseDemo">
+            <select id="exercise">
                 <option value="full_body" title="This is the description for Option 1">Full Body</option>
                 <option value="upper_body">Upper Body</option>
                 <option value="lower_body">Lower Body</option>
@@ -52,11 +50,19 @@
             <p id="demoDesc">Description: </p>
         </section>
         <h2>Saved Workouts</h2>
+        <li class="workoutList"></li>
     </section>
 
 
-    <section class="profile">
-
+    <section class="profileSec">
+        <p class="quote">Transform Your Fitness Journey</p>
+        <p class="quote">Craft personalised HIIT workout tailored to your goals, accompanied by dynamic exercises and empowering progress tracking, to reach your fitness peak!</p>
+        <section class="profileInput">
+            <input type="text" id="profileName" placeholder="Enter Username" required>
+        </section>
+        <button id="newProfileBtn">Create Profile</button>
+        <h2>Saved Profiles</h2>
+        <li class="profileList"></li>
     </section>
     
     <section class="session">
