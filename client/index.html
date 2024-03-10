@@ -9,32 +9,6 @@
 
 <main>
     <header>HevyHIITer</header>
-    <!-- <section id="intro">
-    
-
-        <section>
-            <button id="demoBtn">See how it works!</button>
-        </section>
-
-        <section id="authBtn">
-            <button id="profileBtn">Create User Profile</button>
-        </section>
-    </section>
-
-    <section id="workoutDemo">
-        <h2>Create Workout</h2>
-        <form class="demoForm">
-            <input type="text" id="workoutName" placeholder="Edit Workout Name" required>
-            <p>Choose Exercises</p>
-            <select id="exerciseDemo">
-                <option value="full_body" title="This is the description for Option 1">Full Body</option>
-                <option value="upper_body">Upper Body</option>
-                <option value="lower_body">Lower Body</option>
-                <option value="core">Core</option>
-            </select>
-            <p id="demoDesc">Description: </p>
-        </form>
-    </section> -->
 
     <section class="homeSec hide">
         <button id="createBtn">Create New Workout</button>
@@ -49,8 +23,8 @@
             </select>
             <p id="demoDesc">Description: </p>
         </section>
-        <h2>Saved Workouts</h2>
-        <li class="workoutList"></li>
+        <h2>Your Workouts</h2>
+        <section class="workoutList"></section>
     </section>
 
 
@@ -60,9 +34,10 @@
         <section class="profileInput">
             <input type="text" id="profileName" placeholder="Enter Username" required>
         </section>
+        <p class="profileError hide">Please Enter Username to Create New Profile</p>
         <button id="newProfileBtn">Create Profile</button>
         <h2>Saved Profiles</h2>
-        <li class="profileList"></li>
+        <section class="profileList"></section>
     </section>
     
     <section class="session">
