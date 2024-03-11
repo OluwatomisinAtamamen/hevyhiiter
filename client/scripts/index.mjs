@@ -1,5 +1,10 @@
 const global = {};
 
+function showHome() {
+  global.profileSec.classList.add('hide');
+  global.homeSec.classList.remove('hide');
+}
+
 function verifyInput() {
   if (global.profileName.value === '') {
     return false;
@@ -7,15 +12,26 @@ function verifyInput() {
   return true;
 }
 
+async function fetchExercises() {
+  
+}
+
+function createWorkout() {
+  global.createSec.classList.remove('hide');
+  global.createSec.classList.add('show');
+
+}
+
 async function fetchWorkouts(id){
   const response = await fetch(`data/profiles/workouts/${id}`);
   let workouts;
   if (response.ok) {
     workouts = await response.json();
+    showHome();
+    console.log(workouts, id, 'success');
   } else {
     console.log('failed to load workouts', response);
   }
-  console.log(workouts, 'success');
 }
 
 function showProfileList(profiles){
@@ -23,6 +39,8 @@ function showProfileList(profiles){
     const btn = document.createElement('button');
     btn.innerText = profile.USERNAME;
     btn.classList.add('savedProfileBtn');
+    btn.dataset.profileId = profile.PROFILE_ID;
+    btn.addEventListener('click', () => fetchWorkouts(profile.PROFILE_ID));
     global.profileList.append(btn);
   }
 }
@@ -38,13 +56,12 @@ async function createProfile() {
     });
 
     if (response.ok) {
-      fetchWorkouts(payload.username);
+      const newProfile = await response.json();
+      fetchWorkouts(newProfile.PROFILE_ID);
+      console.log(newProfile);
     } else {
       console.log('failed to create profile', response);
     }
-
-    global.profileSec.classList.add('hide');
-    global.homeSec.classList.remove('hide');
   }else{
     global.profileError.classList.remove('hide');
     global.profileName.focus();
@@ -52,7 +69,7 @@ async function createProfile() {
 }
 
 
-async function loadProfiles(){
+async function fetchAllProfiles(){
   const response = await fetch('data/profiles');
   let profiles;
   if (response.ok) {
@@ -62,16 +79,10 @@ async function loadProfiles(){
   }
   showProfileList(profiles);
   global.profileArray = profiles;
+  console.log(global.profileArray);
 }
 
-function createWorkout() {
-  global.createSec.classList.remove('hide');
-  global.createSec.classList.add('show');
-}
 
-function loadSavedWorkouts() {
-
-}
 
 function prepareHandles() {
   global.createBtn = document.querySelector('#createBtn');
@@ -83,7 +94,6 @@ function prepareHandles() {
   global.profileSec = document.querySelector('.profileSec');
   global.homeSec = document.querySelector('.homeSec');
   global.profileError = document.querySelector('.profileError');
-  global.savedProfileBtn = document.querySelector('.savedProfileBtn');
 }
 
 function addEventListeners() {
@@ -91,10 +101,11 @@ function addEventListeners() {
   global.newProfileBtn.addEventListener('click', createProfile);
 }
 
+
 function pageLoaded() {
   prepareHandles();
   addEventListeners();
-  loadProfiles();
+  fetchAllProfiles();
 }
 
 window.addEventListener('load', pageLoaded);

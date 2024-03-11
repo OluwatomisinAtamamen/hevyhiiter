@@ -12,8 +12,8 @@ async function getProfiles(req, res) {
 }
 
 async function postProfile(req, res) {
-    const username = await db.addProfile(req.body.username);
-    res.json(username);
+    const result = await db.addProfile(req.body.username);
+    res.json({ PROFILE_ID: result.lastID });
 }
 
 async function getWorkouts(req, res) {
@@ -27,7 +27,7 @@ async function getWorkouts(req, res) {
 
 app.get('/data/profiles', getProfiles);
 app.post('/data/profiles', express.json(), postProfile);
-app.get('/data/profiles/workouts:id', getWorkouts);
+app.get('/data/profiles/workouts/:id', getWorkouts);
 
 // make the server available on the network
 app.listen(8080);
