@@ -12,14 +12,43 @@ function verifyInput() {
   return true;
 }
 
-async function fetchExercises() {
+function selectExercise(exerciseName){
+  console.log(exerciseName, 'YESS');
+}
+
+function showAllExercises(exercises){
+  for (const exercise of exercises) {
+    const tile = document.createElement('section');
+    const tileP = document.createElement('p');
+    tileP.innerText = exercise.EXERCISE_NAME;
+    tile.append(tileP)
+    tile.classList.add('exerciseTiles');
+    tile.addEventListener('click', () => selectExercise(exercise.EXERCISE_NAME));
+    global.exerciseList.append(tile);
+  }
+}
+
+async function fetchExercisesByMuscle (muscleName){
   
 }
 
-function createWorkout() {
-  global.createSec.classList.remove('hide');
-  global.createSec.classList.add('show');
+async function fetchExercisesbyEquipment(){}
 
+async function fetchExercises() {
+  const response = await fetch('data/exercises/all');
+  let exercises;
+  if (response.ok) {
+    exercises = await response.json();
+    console.log(exercises, 'success');
+    showAllExercises(exercises)
+  } else {
+    console.log('failed to load exercises', response);
+  }
+}
+
+function toggleNewWorkout() {
+  global.createWorkoutSec.classList.toggle('hide');
+  global.showNewWorkoutBtn.classList.toggle('hide');
 }
 
 async function fetchWorkouts(id){
@@ -27,6 +56,7 @@ async function fetchWorkouts(id){
   let workouts;
   if (response.ok) {
     workouts = await response.json();
+    fetchExercises();
     showHome();
     console.log(workouts, id, 'success');
   } else {
@@ -85,8 +115,8 @@ async function fetchAllProfiles(){
 
 
 function prepareHandles() {
-  global.createBtn = document.querySelector('#createBtn');
-  global.createSec = document.querySelector('.createWorkout');
+  global.showNewWorkoutBtn = document.querySelector('.showNewWorkout');
+  global.createWorkoutSec = document.querySelector('.createWorkout');
   global.workoutName = document.querySelector('#workoutName');
   global.newProfileBtn = document.querySelector('#newProfileBtn');
   global.profileName = document.querySelector('#profileName');
@@ -94,11 +124,14 @@ function prepareHandles() {
   global.profileSec = document.querySelector('.profileSec');
   global.homeSec = document.querySelector('.homeSec');
   global.profileError = document.querySelector('.profileError');
+  global.cancelBtn = document.querySelector('#cancelBtn');
+  global.exerciseList = document.querySelector('.exerciseList');
 }
 
 function addEventListeners() {
-  global.createBtn.addEventListener('click', createWorkout);
+  global.showNewWorkoutBtn.addEventListener('click', toggleNewWorkout);
   global.newProfileBtn.addEventListener('click', createProfile);
+  global.cancelBtn.addEventListener('click', toggleNewWorkout);
 }
 
 

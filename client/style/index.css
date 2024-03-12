@@ -43,8 +43,16 @@ button {
     display: block;
 }
 
-
 input{
     font-size: 1.5em;
     margin-top: 20px;
+}
+
+select, label{
+    font-size: 1.5em;
+    margin-top: 20px;
+}
+
+.space{
+    height: 20px;
 }

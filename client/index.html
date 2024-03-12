@@ -1,29 +1,59 @@
 <!DOCTYPE html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    <title>HevyHIITer</title>
-    <link rel="stylesheet" href="style\index.css">
-</head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>HevyHIITer</title>
+<link rel="stylesheet" href="style\index.css">
 <script defer src="scripts\index.mjs" ></script>
 
 <main>
     <header>HevyHIITer</header>
 
     <section class="homeSec hide">
-        <button id="createBtn">Create New Workout</button>
+        <button class="showNewWorkout">Create New Workout</button>
         <section class="createWorkout hide">
-            <input type="text" id="workoutName" placeholder="Edit Workout Name" required>
-            <p>Choose Exercises</p>
-            <select id="exercise">
-                <option value="full_body" title="This is the description for Option 1">Full Body</option>
-                <option value="upper_body">Upper Body</option>
-                <option value="lower_body">Lower Body</option>
-                <option value="core">Core</option>
+            <label for="workoutName">Workout Name:</label>
+            <input type="text" id="workoutName" placeholder="Enter Workout Name" required>
+            <section class="space"></section>
+            <label for="workoutName">Description:</label>
+            <input type="text" id="workoutDesc" placeholder="Describe your workout" required>
+
+            <section class="space"></section>
+
+            <label for="muscleFilter">Filter by muscles:</label>
+            <select id="muscleFilter">
+                <option value="all_muscles">All Exercises</option>
+                <option value="legs">Legs</option>
+                <option value="shoulders">Shoulders</option>
+                <option value="biceps">Biceps</option>
+                <option value="abs">Abs(Core)</option>
+                <option value="cardio">Cardio</option>
+                <option value="back">Back</option>
+                <option value="glutes">Glutes(Butt)</option>
+                <option value="chest">Chest</option>
+                <option value="triceps">Triceps</option>
             </select>
-            <p id="demoDesc">Description: </p>
+
+            <section class="space"></section>
+
+            <label for="equipmentFilter">Filter by Equipment:</label>
+            <select id="equipmentFilter">
+                <option value="all_exercises">All Exercises</option>
+                <option value="with_equipments">With Equipments</option>
+                <option value="no_equipments">No Equipments</option>
+            </select>
+            <section class="space"></section>
+
+            <input type="text" id="searchExercise" placeholder="Search Exercises">
+
+            <section class="exerciseList">
+            </section>
+
+            <button id="createWorkoutBtn">Create Workout</button>
+            <button id="cancelBtn">Cancel</button>
         </section>
         <h2>Your Workouts</h2>
+        <input type="text" id="searchWorkouts" placeholder="Search Workouts">
         <section class="workoutList"></section>
     </section>
 

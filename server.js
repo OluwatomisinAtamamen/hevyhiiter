@@ -25,9 +25,19 @@ async function getWorkouts(req, res) {
     }
 }
 
+async function getExercises(req, res) {
+    res.json(await db.sendExercises());
+}
+
+async function getExercisesByMuscle(req, res) {
+    res.json(await db.sendExercisesByMuscle(req.params.muscleName));
+}
+
 app.get('/data/profiles', getProfiles);
 app.post('/data/profiles', express.json(), postProfile);
 app.get('/data/profiles/workouts/:id', getWorkouts);
+app.get('/data/exercises/all', getExercises);
+app.get('/data/exercises/by-muscle/:muscleName', getExercisesByMuscle);
 
 // make the server available on the network
 app.listen(8080);
