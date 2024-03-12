@@ -1,10 +1,13 @@
+// Global Variable
 const global = {};
 
-function showHome() {
-  global.profileSec.classList.add('hide');
-  global.homeSec.classList.remove('hide');
+// Function to toggle the home section
+function toggleHome() {
+  global.profileSec.classList.toggle('hide');
+  global.homeSec.classList.toggle('hide');
 }
 
+// Function to verify input
 function verifyInput() {
   if (global.profileName.value === '') {
     return false;
@@ -12,10 +15,12 @@ function verifyInput() {
   return true;
 }
 
+// Function to select an exercise
 function selectExercise(exerciseName){
   console.log(exerciseName, 'YESS');
 }
 
+// Function to show all exercises
 function showAllExercises(exercises){
   for (const exercise of exercises) {
     const tile = document.createElement('section');
@@ -28,12 +33,17 @@ function showAllExercises(exercises){
   }
 }
 
+// Function to fetch exercises by muscle
 async function fetchExercisesByMuscle (muscleName){
-  
+  // TODO: Implement fetching exercises by muscle
 }
 
-async function fetchExercisesbyEquipment(){}
+// Function to fetch exercises by equipment
+async function fetchExercisesbyEquipment(){
+  // TODO: Implement fetching exercises by equipment
+}
 
+// Function to fetch all exercises
 async function fetchExercises() {
   const response = await fetch('data/exercises/all');
   let exercises;
@@ -46,24 +56,27 @@ async function fetchExercises() {
   }
 }
 
+// Function to toggle the new workout section
 function toggleNewWorkout() {
   global.createWorkoutSec.classList.toggle('hide');
   global.showNewWorkoutBtn.classList.toggle('hide');
 }
 
+// Function to fetch workouts
 async function fetchWorkouts(id){
   const response = await fetch(`data/profiles/workouts/${id}`);
   let workouts;
   if (response.ok) {
     workouts = await response.json();
     fetchExercises();
-    showHome();
+    toggleHome();
     console.log(workouts, id, 'success');
   } else {
     console.log('failed to load workouts', response);
   }
 }
 
+// Function to show the profile list
 function showProfileList(profiles){
   for (const profile of profiles) {
     const btn = document.createElement('button');
@@ -75,6 +88,7 @@ function showProfileList(profiles){
   }
 }
 
+// Function to create a new profile
 async function createProfile() {
   if (verifyInput()){
     const payload = { username: global.profileName.value };
@@ -98,7 +112,7 @@ async function createProfile() {
   }
 }
 
-
+// Function to fetch all profiles
 async function fetchAllProfiles(){
   const response = await fetch('data/profiles');
   let profiles;
@@ -112,8 +126,7 @@ async function fetchAllProfiles(){
   console.log(global.profileArray);
 }
 
-
-
+// Function to prepare handles
 function prepareHandles() {
   global.showNewWorkoutBtn = document.querySelector('.showNewWorkout');
   global.createWorkoutSec = document.querySelector('.createWorkout');
@@ -128,13 +141,14 @@ function prepareHandles() {
   global.exerciseList = document.querySelector('.exerciseList');
 }
 
+// Function to add event listeners
 function addEventListeners() {
   global.showNewWorkoutBtn.addEventListener('click', toggleNewWorkout);
   global.newProfileBtn.addEventListener('click', createProfile);
   global.cancelBtn.addEventListener('click', toggleNewWorkout);
 }
 
-
+// Function to be called when the page is loaded
 function pageLoaded() {
   prepareHandles();
   addEventListeners();
