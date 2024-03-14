@@ -38,13 +38,13 @@ export async function sendWorkouts(id){
 // Retrieve all exercises from the database
 export async function sendExercises(){
   const db = await dbConn;
-  const exercises = await db.all("SELECT EXERCISE_NAME, DESCRIPTION FROM EXERCISE WHERE EXERCISE_NAME != 'Rest'");
+  const exercises = await db.all("SELECT EXERCISE_NAME, DESCRIPTION FROM EXERCISE WHERE EXERCISE_NAME != 'Rest' ORDER BY EXERCISE_NAME ASC");
   return exercises;
 }
 
 // Retrieve exercises for a specific muscle group
 export async function sendExercisesByMuscle(muscleName){
   const db = await dbConn;
-  const exercises = await db.all("SELECT EXERCISE_NAME, DESCRIPTION FROM EXERCISE JOIN EXERCISE_MUSCLE ON EXERCISE.EXERCISE_ID = EXERCISE_MUSCLE.EXERCISE_ID JOIN MUSCLE_GROUP ON EXERCISE_MUSCLE.MUSCLE_ID = MUSCLE_GROUP.MUSCLE_ID WHERE MUSCLE_NAME = ?", muscleName);
+  const exercises = await db.all("SELECT EXERCISE_NAME, DESCRIPTION FROM EXERCISE JOIN EXERCISE_MUSCLE ON EXERCISE.EXERCISE_ID = EXERCISE_MUSCLE.EXERCISE_ID JOIN MUSCLE_GROUP ON EXERCISE_MUSCLE.MUSCLE_ID = MUSCLE_GROUP.MUSCLE_ID WHERE MUSCLE_NAME = ? ORDER BY EXERCISE_NAME ASC", muscleName);
   return exercises;
 }

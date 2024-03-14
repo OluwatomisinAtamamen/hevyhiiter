@@ -17,9 +17,11 @@
             <section class="space"></section>
             <label for="workoutName">Description:</label>
             <input type="text" id="workoutDesc" placeholder="Describe your workout" required>
-
             <section class="space"></section>
 
+            <section class="selectedExercises"></section>
+
+            <h2>Choose Exercises</h2>
             <label for="muscleFilter">Filter by muscles:</label>
             <select id="muscleFilter">
                 <option value="all_muscles">All Exercises</option>
@@ -36,16 +38,8 @@
 
             <section class="space"></section>
 
-            <label for="equipmentFilter">Filter by Equipment:</label>
-            <select id="equipmentFilter">
-                <option value="all_exercises">All Exercises</option>
-                <option value="with_equipments">With Equipments</option>
-                <option value="no_equipments">No Equipments</option>
-            </select>
-            <section class="space"></section>
-
             <input type="text" id="searchExercise" placeholder="Search Exercises">
-
+            <section class="space"></section>
             <section class="exerciseList">
             </section>
 

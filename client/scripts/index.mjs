@@ -15,13 +15,58 @@ function verifyInput() {
   return true;
 }
 
-// Function to select an exercise
-function selectExercise(exerciseName){
-  console.log(exerciseName, 'YESS');
+function removeExercise(exerciseName){
+  const selectedExercises = Array.from(global.selectedExercises.children);
+  for (const exercise of selectedExercises) {
+    if (exercise.textContent.includes(exerciseName)) {
+      exercise.remove();
+    }
+  }
 }
 
-// Function to show all exercises
+// Function to select an exercise
+function selectExercise(exerciseName){
+  // if (global.selectedExerciseArray == undefined) {
+  //   global.selectedExerciseArray = [];
+  // }
+  // global.selectedExerciseArray.push(exerciseName);
+
+  const selectedExercise = document.createElement('li');
+  const removeBtn = document.createElement('button');
+  removeBtn.classList.add('removeBtn');
+  removeBtn.addEventListener('click', () => removeExercise(exerciseName));
+  selectedExercise.innerText = exerciseName;
+  selectedExercise.append(removeBtn);
+  global.selectedExercises.append(selectedExercise);
+}
+
+function searchExerciseList(){
+  const query = global.searchExercise.value.toLowerCase();
+  const exercises = Array.from(global.exerciseList.children);
+  for (const exercise of exercises) {
+    const exerciseName = exercise.textContent.toLowerCase();
+    if (exerciseName.includes(query)) {
+      exercise.style.display = '';
+    } else {
+      exercise.style.display = 'none';
+    }
+  }
+}
+
+function muscleFilter (){
+  const selectedOption = global.selectMuscle.options[global.selectMuscle.selectedIndex];
+  // Get the text content of the selected option
+  const selectedMuscle = selectedOption.textContent;
+  if (selectedMuscle !== 'All Exercises'){
+    fetchExercisesByMuscle(selectedMuscle);
+  }
+}
+
+// Function to show exercises
 function showAllExercises(exercises){
+  // Clear the existing exercise list
+  global.exerciseList.innerHTML = '';
+
   for (const exercise of exercises) {
     const tile = document.createElement('section');
     const tileP = document.createElement('p');
@@ -35,12 +80,15 @@ function showAllExercises(exercises){
 
 // Function to fetch exercises by muscle
 async function fetchExercisesByMuscle (muscleName){
-  // TODO: Implement fetching exercises by muscle
-}
-
-// Function to fetch exercises by equipment
-async function fetchExercisesbyEquipment(){
-  // TODO: Implement fetching exercises by equipment
+  const response = await fetch(`data/exercises/by-muscle/${muscleName}`);
+  let exercises;
+  if (response.ok) {
+    exercises = await response.json();
+    console.log(exercises, 'success');
+    showAllExercises(exercises)
+  } else {
+    console.log('failed to load exercises', response);
+  }
 }
 
 // Function to fetch all exercises
@@ -139,6 +187,9 @@ function prepareHandles() {
   global.profileError = document.querySelector('.profileError');
   global.cancelBtn = document.querySelector('#cancelBtn');
   global.exerciseList = document.querySelector('.exerciseList');
+  global.selectMuscle = document.querySelector('#muscleFilter');
+  global.searchExercise = document.querySelector('#searchExercise');
+  global.selectedExercises = document.querySelector('.selectedExercises');
 }
 
 // Function to add event listeners
@@ -146,6 +197,8 @@ function addEventListeners() {
   global.showNewWorkoutBtn.addEventListener('click', toggleNewWorkout);
   global.newProfileBtn.addEventListener('click', createProfile);
   global.cancelBtn.addEventListener('click', toggleNewWorkout);
+  global.selectMuscle.addEventListener("change", muscleFilter);
+  global.searchExercise.addEventListener('input', searchExerciseList);
 }
 
 // Function to be called when the page is loaded
