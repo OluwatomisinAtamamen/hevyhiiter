@@ -26,17 +26,30 @@ function removeExercise(exerciseName){
 
 // Function to select an exercise
 function selectExercise(exerciseName){
-  // if (global.selectedExerciseArray == undefined) {
-  //   global.selectedExerciseArray = [];
-  // }
-  // global.selectedExerciseArray.push(exerciseName);
-
-  const selectedExercise = document.createElement('li');
+  const selectedExercise = document.createElement('section');
   const removeBtn = document.createElement('button');
   removeBtn.classList.add('removeBtn');
   removeBtn.addEventListener('click', () => removeExercise(exerciseName));
+
+  // Create a timer input
+  const timerInput = document.createElement('input');
+  timerInput.type = 'number';
+  timerInput.min = '0'; // minimum value
+  timerInput.max = '60'; // maximum value
+  timerInput.placeholder = 'Time'; // placeholder text
+
+  // Create a timer unit select
+  const timerUnit = document.createElement('select');
+  const secsOption = document.createElement('option');
+  secsOption.value = 'secs';
+  secsOption.text = 'secs';
+  const minOption = document.createElement('option');
+  minOption.value = 'min';
+  minOption.text = 'min';
+  timerUnit.append(secsOption, minOption);
+
   selectedExercise.innerText = exerciseName;
-  selectedExercise.append(removeBtn);
+  selectedExercise.append(timerInput, timerUnit, removeBtn);
   global.selectedExercises.append(selectedExercise);
 }
 
@@ -140,7 +153,6 @@ function showProfileList(profiles){
 async function createProfile() {
   if (verifyInput()){
     const payload = { username: global.profileName.value };
-
     const response = await fetch('data/profiles', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
