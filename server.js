@@ -8,29 +8,29 @@ const app = express();
 app.use(express.static('client'));
 
 async function getProfiles(req, res) {
-    res.json(await db.sendProfiles());
+  res.json(await db.sendProfiles());
 }
 
 async function postProfile(req, res) {
-    const result = await db.addProfile(req.body.username);
-    res.json({ PROFILE_ID: result.lastID });
+  const result = await db.addProfile(req.body.username);
+  res.json({ PROFILE_ID: result.lastID });
 }
 
 async function getWorkouts(req, res) {
-    const workouts = await db.sendWorkouts(req.params.id);
-    if (workouts) {
-        res.json(workouts);
-    } else {
-        res.status(404).send('No match for that ID.');
-    }
+  const workouts = await db.sendWorkouts(req.params.id);
+  if (workouts) {
+    res.json(workouts);
+  } else {
+    res.status(404).send('No match for that ID.');
+  }
 }
 
 async function getExercises(req, res) {
-    res.json(await db.sendExercises());
+  res.json(await db.sendExercises());
 }
 
 async function getExercisesByMuscle(req, res) {
-    res.json(await db.sendExercisesByMuscle(req.params.muscleName));
+  res.json(await db.sendExercisesByMuscle(req.params.muscleName));
 }
 
 app.get('/data/profiles', getProfiles);
