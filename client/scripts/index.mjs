@@ -15,7 +15,7 @@ function verifyInput() {
   return true;
 }
 
-function removeExercise(exerciseName){
+function removeExercise(exerciseName) {
   const selectedExercises = Array.from(global.selectedExercises.children);
   for (const exercise of selectedExercises) {
     if (exercise.textContent.includes(exerciseName)) {
@@ -25,7 +25,7 @@ function removeExercise(exerciseName){
 }
 
 // Function to select an exercise
-function selectExercise(exerciseName){
+function selectExercise(exerciseName) {
   const selectedExercise = document.createElement('section');
   const removeBtn = document.createElement('button');
   removeBtn.classList.add('removeBtn');
@@ -53,7 +53,7 @@ function selectExercise(exerciseName){
   global.selectedExercises.append(selectedExercise);
 }
 
-function searchExerciseList(){
+function searchExerciseList() {
   const query = global.searchExercise.value.toLowerCase();
   const exercises = Array.from(global.exerciseList.children);
   for (const exercise of exercises) {
@@ -66,17 +66,17 @@ function searchExerciseList(){
   }
 }
 
-function muscleFilter (){
+function muscleFilter() {
   const selectedOption = global.selectMuscle.options[global.selectMuscle.selectedIndex];
   // Get the text content of the selected option
   const selectedMuscle = selectedOption.textContent;
-  if (selectedMuscle !== 'All Exercises'){
+  if (selectedMuscle !== 'All Exercises') {
     fetchExercisesByMuscle(selectedMuscle);
   }
 }
 
 // Function to show exercises
-function showAllExercises(exercises){
+function showAllExercises(exercises) {
   // Clear the existing exercise list
   global.exerciseList.innerHTML = '';
 
@@ -84,7 +84,7 @@ function showAllExercises(exercises){
     const tile = document.createElement('section');
     const tileP = document.createElement('p');
     tileP.innerText = exercise.EXERCISE_NAME;
-    tile.append(tileP)
+    tile.append(tileP);
     tile.classList.add('exerciseTiles');
     tile.addEventListener('click', () => selectExercise(exercise.EXERCISE_NAME));
     global.exerciseList.append(tile);
@@ -92,13 +92,13 @@ function showAllExercises(exercises){
 }
 
 // Function to fetch exercises by muscle
-async function fetchExercisesByMuscle (muscleName){
+async function fetchExercisesByMuscle(muscleName) {
   const response = await fetch(`data/exercises/by-muscle/${muscleName}`);
   let exercises;
   if (response.ok) {
     exercises = await response.json();
     console.log(exercises, 'success');
-    showAllExercises(exercises)
+    showAllExercises(exercises);
   } else {
     console.log('failed to load exercises', response);
   }
@@ -111,7 +111,7 @@ async function fetchExercises() {
   if (response.ok) {
     exercises = await response.json();
     console.log(exercises, 'success');
-    showAllExercises(exercises)
+    showAllExercises(exercises);
   } else {
     console.log('failed to load exercises', response);
   }
@@ -124,7 +124,7 @@ function toggleNewWorkout() {
 }
 
 // Function to fetch workouts
-async function fetchWorkouts(id){
+async function fetchWorkouts(id) {
   const response = await fetch(`data/profiles/workouts/${id}`);
   let workouts;
   if (response.ok) {
@@ -138,7 +138,7 @@ async function fetchWorkouts(id){
 }
 
 // Function to show the profile list
-function showProfileList(profiles){
+function showProfileList(profiles) {
   for (const profile of profiles) {
     const btn = document.createElement('button');
     btn.innerText = profile.USERNAME;
@@ -151,7 +151,7 @@ function showProfileList(profiles){
 
 // Function to create a new profile
 async function createProfile() {
-  if (verifyInput()){
+  if (verifyInput()) {
     const payload = { username: global.profileName.value };
     const response = await fetch('data/profiles', {
       method: 'POST',
@@ -166,14 +166,14 @@ async function createProfile() {
     } else {
       console.log('failed to create profile', response);
     }
-  }else{
+  } else {
     global.profileError.classList.remove('hide');
     global.profileName.focus();
   }
 }
 
 // Function to fetch all profiles
-async function fetchAllProfiles(){
+async function fetchAllProfiles() {
   const response = await fetch('data/profiles');
   let profiles;
   if (response.ok) {
@@ -209,7 +209,7 @@ function addEventListeners() {
   global.showNewWorkoutBtn.addEventListener('click', toggleNewWorkout);
   global.newProfileBtn.addEventListener('click', createProfile);
   global.cancelBtn.addEventListener('click', toggleNewWorkout);
-  global.selectMuscle.addEventListener("change", muscleFilter);
+  global.selectMuscle.addEventListener('change', muscleFilter);
   global.searchExercise.addEventListener('input', searchExerciseList);
 }
 
