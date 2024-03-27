@@ -38,6 +38,12 @@ function selectExercise(exerciseName) {
   timerInput.max = '60'; // maximum value
   timerInput.placeholder = 'Time'; // placeholder text
 
+  timerInput.addEventListener('input', () => {
+    if (timerInput.value > 60) {
+      timerInput.value = 60;
+    }
+  });
+
   // Create a timer unit select
   const timerUnit = document.createElement('select');
   const secsOption = document.createElement('option');
