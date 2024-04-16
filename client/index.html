@@ -4,21 +4,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <title>HevyHIITer</title>
 <link rel="stylesheet" href="style\index.css">
-<script defer src="scripts\index.mjs" ></script>
+<script type="module" defer src="scripts\index.mjs" ></script>
 
 <main>
     <header>HevyHIITer</header>
 
-    <section class="homeSec hide">
+    <section id="home" class="homeSec hide">
         <button class="showNewWorkout">Create New Workout</button>
-        <section class="createWorkout hide">
+        <section class="createWorkoutSec hide">
             <label for="workoutName">Workout Name:</label>
             <input type="text" id="workoutName" placeholder="Enter Workout Name" required>
             <section class="space"></section>
             <label for="workoutName">Description:</label>
             <input type="text" id="workoutDesc" placeholder="Describe your workout" required>
+            <p class="workoutDescError hide">Please Enter Workout Name and Description</p>
+            <p class="noExercisesError hide">Please Add Exercises to Workout</p>
+            <p class="incompleteFormError hide">Please completely fill in the Exercise and Rest Input</p>
             <section class="space"></section>
 
+            <button id="clearExercises">Clear Exercises</button>
             <section class="selectedExercises">
             </section>
 
@@ -53,7 +57,7 @@
     </section>
 
 
-    <section class="profileSec">
+    <section id="login" class="profileSec">
         <p class="quote">Transform Your Fitness Journey</p>
         <p class="quote">Craft personalised HIIT workout tailored to your goals, accompanied by dynamic exercises and empowering progress tracking, to reach your fitness peak!</p>
         <section class="profileInput">
