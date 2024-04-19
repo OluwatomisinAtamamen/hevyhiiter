@@ -35,13 +35,18 @@ export async function sendWorkouts(id) {
   return workouts;
 }
 
-export async function addWorkout(id, workoutName, workoutDesc, workoutExercises) {
+export async function addWorkout(id, workoutName, workoutDesc, workoutExercises, totalDuration) {
   const db = await dbConn;
-  const workout = await db.run('INSERT INTO WORKOUT (PROFILE_ID, WORKOUT_NAME, DESCRIPTION) VALUES (?, ?, ?)', [id, workoutName, workoutDesc]);
+  const workout = await db.run('INSERT INTO WORKOUT (PROFILE_ID, WORKOUT_NAME, DESCRIPTION, WORKOUT_DURATION) VALUES (?, ?, ?, ?)', [id, workoutName, workoutDesc, totalDuration]);
   const workoutID = workout.lastID;
+
   for (const exercise of workoutExercises) {
-    await db.run('INSERT INTO WORKOUT_EXERCISE (WORKOUT_ID, EXERCISE_ID) VALUES (?, (SELECT EXERCISE_ID FROM EXERCISE WHERE EXERCISE_NAME = ?))', [workoutID, exercise]);
+    const { exerciseTimeInput, restTimeInput, exerciseName } = exercise;
+    const exerciseId = await db.get('SELECT EXERCISE_ID FROM EXERCISE WHERE EXERCISE_NAME = ?', [exerciseName]);
+
+    await db.run('INSERT INTO WORKOUT_EXERCISE (WORKOUT_ID, EXERCISE_ID, EXERCISE_DURATION, REST_DURATION) VALUES (?, ?, ?, ?)', [workoutID, exerciseId, exerciseTimeInput, restTimeInput]);
   }
+
   return workout;
 }
 
