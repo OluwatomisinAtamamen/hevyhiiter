@@ -8,19 +8,21 @@
 
 <body>
     <header>HevyHIITer</header>
-    <nav class="nav">
-        <a href="/home" class="navLink" data-link>Your Workouts</a>
-    </nav>
 
     <section id="home" class="homeSec page">
-        <a href="/" class="navLink" data-link><button class="logoutBtn">Log Out</button></a>
+        <a href="/" data-link><button class="logoutBtn">Log Out</button></a>
         <a href="/createWorkout" data-link><button class="showNewWorkout">Create New Workout</button></a>
+
         <h2>Your Workouts</h2>
-        <input type="text" id="searchWorkouts" placeholder="Search Workouts">
+        <input type="text" id="searchWorkout" placeholder="Search Workouts">
         <section class="workoutList"></section>
     </section>
 
     <section id="createNewWorkout" class="createWorkoutSec page">
+        <nav class="nav">
+            <a href="/home" class="navLink" data-link>Your Workouts</a>
+        </nav>
+
         <label for="workoutName">Workout Name:</label>
         <input type="text" id="workoutName" placeholder="Enter Workout Name" required>
         <section class="space"></section>

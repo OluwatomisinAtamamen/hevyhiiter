@@ -60,7 +60,7 @@ function handleCreateWorkoutSection() {
 }
 
 // Router function to handle different routes
-const router = () => {
+function router() {
   const routes = [
     { path: '/', view: () => handleLoginSection() },
     { path: '/home', view: () => handleHomeSection() },
@@ -86,19 +86,11 @@ const router = () => {
 
   // Call the view function of the matched route
   match.route.view();
-};
+}
 
 // Function to clear exercises
 function clearExercises() {
   global.selectedExercises.innerHTML = '';
-}
-
-// Function to verify input
-function verifyInput() {
-  if (global.profileName.value === '') {
-    return false;
-  }
-  return true;
 }
 
 // Function to create a timer input and unit
@@ -231,6 +223,20 @@ async function fetchExercises() {
   }
 }
 
+// Function to search workout list
+function searchWorkoutList() {
+  const query = global.searchWorkout.value.toLowerCase();
+  const workouts = Array.from(global.workoutList.children);
+  for (const workout of workouts) {
+    const workoutName = workout.textContent.toLowerCase();
+    if (workoutName.includes(query)) {
+      workout.style.display = '';
+    } else {
+      workout.style.display = 'none';
+    }
+  }
+}
+
 // Function to select a workout
 function selectWorkout(workoutId) {
   console.log(workoutId);
@@ -359,6 +365,14 @@ function showProfileList(profiles) {
   }
 }
 
+// Function to verify input
+function verifyInput() {
+  if (global.profileName.value === '') {
+    return false;
+  }
+  return true;
+}
+
 // Function to create a new profile
 async function createProfile() {
   if (verifyInput()) {
@@ -409,6 +423,7 @@ function prepareHandles() {
   global.workoutDesc = document.querySelector('#workoutDesc');
   global.createWorkoutBtn = document.querySelector('#createWorkoutBtn');
   global.workoutList = document.querySelector('.workoutList');
+  global.searchWorkout = document.querySelector('#searchWorkout');
 
   global.newProfileBtn = document.querySelector('#newProfileBtn');
   global.profileName = document.querySelector('#profileName');
@@ -425,8 +440,6 @@ function prepareHandles() {
   global.workoutDescError = document.querySelector('.workoutDescError');
   global.noExercisesError = document.querySelector('.noExercisesError');
   global.incompleteFormError = document.querySelector('.incompleteFormError');
-
-  global.nav = document.querySelector('.nav');
 }
 
 // Function to add event listeners
@@ -445,6 +458,7 @@ function addEventListeners() {
 
   global.selectMuscle.addEventListener('change', muscleFilter);
   global.searchExercise.addEventListener('input', searchExerciseList);
+  global.searchWorkout.addEventListener('input', searchWorkoutList);
   global.clearExercises.addEventListener('click', clearExercises);
 }
 
