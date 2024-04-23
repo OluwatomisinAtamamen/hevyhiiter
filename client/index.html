@@ -9,60 +9,58 @@
 <body>
     <header>HevyHIITer</header>
     <nav class="nav">
-        <a href="/" class="navLink" data-link>Login</a>
         <a href="/home" class="navLink" data-link>Your Workouts</a>
-        <a href="/createWorkout" class="navLink" data-link>Create Workout</a>
     </nav>
 
-    <section id="home" class="homeSec hide">
-        <button class="showNewWorkout">Create New Workout</button>
-        <section class="createWorkoutSec hide">
-            <label for="workoutName">Workout Name:</label>
-            <input type="text" id="workoutName" placeholder="Enter Workout Name" required>
-            <section class="space"></section>
-            <label for="workoutName">Description:</label>
-            <input type="text" id="workoutDesc" placeholder="Describe your workout" required>
-            <p class="workoutDescError hide">Please Enter Workout Name and Description</p>
-            <p class="noExercisesError hide">Please Add Exercises to Workout</p>
-            <p class="incompleteFormError hide">Please completely fill in the Exercise and Rest Input</p>
-            <section class="space"></section>
-
-            <button id="clearExercises">Clear Exercises</button>
-            <section class="selectedExercises">
-            </section>
-
-            <h2>Add Exercises</h2>
-            <label for="muscleFilter">Filter by muscles:</label>
-            <select id="muscleFilter">
-                <option value="all_muscles">All Exercises</option>
-                <option value="legs">Legs</option>
-                <option value="shoulders">Shoulders</option>
-                <option value="biceps">Biceps</option>
-                <option value="abs">Abs(Core)</option>
-                <option value="cardio">Cardio</option>
-                <option value="back">Back</option>
-                <option value="glutes">Glutes(Butt)</option>
-                <option value="chest">Chest</option>
-                <option value="triceps">Triceps</option>
-            </select>
-
-            <section class="space"></section>
-
-            <input type="text" id="searchExercise" placeholder="Search Exercises">
-            <section class="space"></section>
-            <section class="exerciseList">
-            </section>
-
-            <button id="createWorkoutBtn">Create Workout</button>
-            <button id="cancelBtn">Cancel</button>
-        </section>
+    <section id="home" class="homeSec page">
+        <a href="/" class="navLink" data-link><button class="logoutBtn">Log Out</button></a>
+        <a href="/createWorkout" data-link><button class="showNewWorkout">Create New Workout</button></a>
         <h2>Your Workouts</h2>
         <input type="text" id="searchWorkouts" placeholder="Search Workouts">
         <section class="workoutList"></section>
     </section>
 
+    <section id="createNewWorkout" class="createWorkoutSec page">
+        <label for="workoutName">Workout Name:</label>
+        <input type="text" id="workoutName" placeholder="Enter Workout Name" required>
+        <section class="space"></section>
+        <label for="workoutName">Description:</label>
+        <input type="text" id="workoutDesc" placeholder="Describe your workout" required>
+        <p class="workoutDescError hide">Please Enter Workout Name and Description</p>
+        <p class="noExercisesError hide">Please Add Exercises to Workout</p>
+        <p class="incompleteFormError hide">Please completely fill in the Exercise and Rest Input</p>
+        <section class="space"></section>
 
-    <section id="login" class="profileSec">
+        <button id="clearExercises">Clear Exercises</button>
+        <section class="selectedExercises">
+        </section>
+
+        <h2>Add Exercises</h2>
+        <label for="muscleFilter">Filter by muscles:</label>
+        <select id="muscleFilter">
+            <option value="all_muscles">All Exercises</option>
+            <option value="legs">Legs</option>
+            <option value="shoulders">Shoulders</option>
+            <option value="biceps">Biceps</option>
+            <option value="abs">Abs(Core)</option>
+            <option value="cardio">Cardio</option>
+            <option value="back">Back</option>
+            <option value="glutes">Glutes(Butt)</option>
+            <option value="chest">Chest</option>
+            <option value="triceps">Triceps</option>
+        </select>
+
+        <section class="space"></section>
+
+        <input type="text" id="searchExercise" placeholder="Search Exercises">
+        <section class="space"></section>
+        <section class="exerciseList">
+        </section>
+
+        <button id="createWorkoutBtn">Create Workout</button>
+    </section>
+
+    <section id="login" class="profileSec page">
         <p class="quote">Transform Your Fitness Journey</p>
         <p class="quote">Craft personalised HIIT workout tailored to your goals, accompanied by dynamic exercises and empowering progress tracking, to reach your fitness peak!</p>
         <section class="profileInput">

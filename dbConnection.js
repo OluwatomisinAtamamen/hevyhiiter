@@ -31,7 +31,7 @@ export async function addProfile(username) {
 // Retrieve workouts for a specific profile
 export async function sendWorkouts(id) {
   const db = await dbConn;
-  const workouts = await db.all('SELECT WORKOUT_NAME, DESCRIPTION FROM PROFILE JOIN WORKOUT ON PROFILE.PROFILE_ID = WORKOUT.PROFILE_ID WHERE PROFILE.PROFILE_ID = ?', id);
+  const workouts = await db.all('SELECT WORKOUT_ID, WORKOUT_NAME, DESCRIPTION, WORKOUT_DURATION, DATE_CREATED FROM PROFILE JOIN WORKOUT ON PROFILE.PROFILE_ID = WORKOUT.PROFILE_ID WHERE PROFILE.PROFILE_ID = ?', id);
   return workouts;
 }
 
