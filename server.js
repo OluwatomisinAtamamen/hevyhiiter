@@ -35,6 +35,11 @@ async function postWorkouts(req, res) {
   }
 }
 
+async function deleteWorkout(req, res) {
+  const result = await db.deleteWorkout(req.params.userId, req.params.workoutId);
+  res.json(result);
+}
+
 async function getExercises(req, res) {
   res.json(await db.sendExercises());
 }
@@ -47,6 +52,7 @@ app.get('/data/profiles', getProfiles);
 app.post('/data/profiles', express.json(), postProfile);
 app.get('/data/profiles/workouts/:id', getWorkouts);
 app.post('/data/profiles/workouts/:id', express.json(), postWorkouts);
+app.delete('/data/profiles/workouts/:userId/:workoutId', deleteWorkout);
 app.get('/data/exercises/all', getExercises);
 app.get('/data/exercises/by-muscle/:muscleName', getExercisesByMuscle);
 

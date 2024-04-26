@@ -238,6 +238,20 @@ async function fetchExercises() {
   }
 }
 
+async function deleteWorkout(workoutId) {
+  const response = await fetch(`data/profiles/workouts/${global.currentUserId}/${workoutId}`, {
+    method: 'DELETE',
+  });
+
+  if (response.ok) {
+    console.log('workout deleted', workoutId);
+    navigateTo('/home');
+    location.reload(true);
+  } else {
+    console.log('failed to delete workout', response);
+  }
+}
+
 // Function to search workout list
 function searchWorkoutList() {
   const query = global.searchWorkout.value.toLowerCase();
@@ -259,16 +273,21 @@ function startWorkout(workoutId) {
 
 // Function to select a workout
 function selectWorkout(workout) {
+  global.viewWorkoutPage.innerHTML = '';
+  console.log(global.currentWorkoutID, 'current workout');
   console.log(workout);
   const startWorkoutBtn = document.createElement('button');
-  const deleteWorkoutBtn = document.createElement('button');
   const editWorkoutBtn = document.createElement('button');
-  
+  const deleteWorkoutBtn = document.createElement('button');
+
   startWorkoutBtn.textContent = 'Start Workout';
-  startWorkoutBtn.addEventListener('click', () => startWorkout(workout.WORKOUT_ID));
-  deleteWorkoutBtn.textContent = 'Delete Workout';
   editWorkoutBtn.textContent = 'Edit Workout';
-  global.viewWorkoutPage.append(startWorkoutBtn);
+  deleteWorkoutBtn.textContent = 'Delete Workout';
+
+  startWorkoutBtn.addEventListener('click', () => startWorkout(workout.WORKOUT_ID));
+  // editWorkoutBtn.addEventListener('click', () => navigateTo('/createWorkout'));
+  deleteWorkoutBtn.addEventListener('click', () => deleteWorkout(workout.WORKOUT_ID));
+  global.viewWorkoutPage.append(startWorkoutBtn, editWorkoutBtn, deleteWorkoutBtn);
   navigateTo('/viewWorkout');
 }
 
@@ -315,7 +334,6 @@ function getNewWorkoutForm() {
     const inputsAndSelects = exercise.querySelectorAll('input');
     const exerciseTimeInput = Number(inputsAndSelects[0].value);
     const restTimeInput = Number(inputsAndSelects[1].value);
-
 
     // Check if any of the values are empty
     if (!exerciseName || !exerciseTimeInput || !restTimeInput) {
@@ -482,6 +500,9 @@ function addEventListeners() {
   });
 
   global.createWorkoutBtn.addEventListener('click', () => createNewWorkout(global.currentUserId));
+  if (global.currentWorkoutID) {
+    global.deleteWorkoutBtn.addEventListener('click', () => deleteWorkout(global.currentWorkoutID));
+  }
 
   global.newProfileBtn.addEventListener('click', createProfile);
   global.logoutBtn.addEventListener('click', logOut);

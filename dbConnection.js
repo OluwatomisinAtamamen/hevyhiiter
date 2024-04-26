@@ -53,6 +53,12 @@ export async function addWorkout(id, workoutName, workoutDesc, workoutExercises,
   return workout;
 }
 
+export async function deleteWorkout(userId, workoutId) {
+  const db = await dbConn;
+  const result = await db.run('DELETE FROM WORKOUT WHERE PROFILE_ID = ? AND WORKOUT_ID = ?', [userId, workoutId]);
+  return result;
+}
+
 // Retrieve all exercises from the database
 export async function sendExercises() {
   const db = await dbConn;
