@@ -59,12 +59,34 @@ function handleCreateWorkoutSection() {
   }
 }
 
+function handleWorkoutSessionSection() {
+  const currentUserId = localStorage.getItem('currentUserId');
+  if (currentUserId) {
+    global.currentUserId = currentUserId;
+    showSection('#workoutSession');
+  } else {
+    navigateTo('/');
+  }
+}
+
+function handleViewWorkoutSection() {
+  const currentUserId = localStorage.getItem('currentUserId');
+  if (currentUserId) {
+    global.currentUserId = currentUserId;
+    showSection('#viewWorkout');
+  } else {
+    navigateTo('/');
+  }
+}
+
 // Router function to handle different routes
 function router() {
   const routes = [
     { path: '/', view: () => handleLoginSection() },
     { path: '/home', view: () => handleHomeSection() },
     { path: '/createWorkout', view: () => handleCreateWorkoutSection() },
+    { path: '/viewWorkout', view: () => handleViewWorkoutSection() },
+    { path: '/workoutSession', view: () => handleWorkoutSessionSection() },
   ];
 
   // Test each route for potential match
@@ -98,27 +120,17 @@ function createTimerInputAndUnit() {
   // Create a timer input
   const timerInput = document.createElement('input');
   timerInput.type = 'number';
-  timerInput.min = '0'; // minimum value
-  timerInput.max = '60'; // maximum value
+  timerInput.min = '1'; // minimum value
+  timerInput.max = '1500'; // maximum value
   timerInput.placeholder = 'Exercise Time'; // placeholder text
 
   timerInput.addEventListener('input', () => {
-    if (timerInput.value > 60) {
-      timerInput.value = 60;
+    if (timerInput.value > 1500) {
+      timerInput.value = 1500;
     }
   });
 
-  // Create a timer unit select
-  const timerUnit = document.createElement('select');
-  const secsOption = document.createElement('option');
-  secsOption.value = 'secs';
-  secsOption.text = 'secs';
-  const minOption = document.createElement('option');
-  minOption.value = 'min';
-  minOption.text = 'min';
-  timerUnit.append(secsOption, minOption);
-
-  return { timerInput, timerUnit };
+  return { timerInput };
 }
 
 // Function to remove an exercise
@@ -144,14 +156,17 @@ function selectExercise(exerciseName) {
   const exerciseNameElement = document.createElement('p');
   exerciseNameElement.textContent = exerciseName;
 
-  // Create exercise time input and unit
-  const { timerInput: exerciseTimeInput, timerUnit: exerciseTimeUnit } = createTimerInputAndUnit();
+  // Create exercise time input
+  const { timerInput: exerciseTimeInput } = createTimerInputAndUnit();
 
-  // Create rest time input and unit
-  const { timerInput: restTimeInput, timerUnit: restTimeUnit } = createTimerInputAndUnit();
+  // Create rest time input
+  const { timerInput: restTimeInput } = createTimerInputAndUnit();
   restTimeInput.placeholder = 'Rest Time'; // update placeholder
 
-  selectedExercise.append(exerciseNameElement, exerciseTimeInput, exerciseTimeUnit, restTimeInput, restTimeUnit, removeBtn);
+  const timerUnit = document.createElement('span');
+  timerUnit.textContent = 'secs'; // unit text
+
+  selectedExercise.append(exerciseNameElement, exerciseTimeInput, timerUnit, restTimeInput, timerUnit, removeBtn);
   global.selectedExercises.append(selectedExercise);
 }
 
@@ -237,9 +252,24 @@ function searchWorkoutList() {
   }
 }
 
-// Function to select a workout
-function selectWorkout(workoutId) {
+function startWorkout(workoutId) {
   console.log(workoutId);
+  navigateTo('/workoutSession');
+}
+
+// Function to select a workout
+function selectWorkout(workout) {
+  console.log(workout);
+  const startWorkoutBtn = document.createElement('button');
+  const deleteWorkoutBtn = document.createElement('button');
+  const editWorkoutBtn = document.createElement('button');
+  
+  startWorkoutBtn.textContent = 'Start Workout';
+  startWorkoutBtn.addEventListener('click', () => startWorkout(workout.WORKOUT_ID));
+  deleteWorkoutBtn.textContent = 'Delete Workout';
+  editWorkoutBtn.textContent = 'Edit Workout';
+  global.viewWorkoutPage.append(startWorkoutBtn);
+  navigateTo('/viewWorkout');
 }
 
 // Function to show all workouts
@@ -250,7 +280,7 @@ function showAllWorkouts(workouts) {
     workoutTileP.textContent = workout.WORKOUT_NAME;
     workoutTile.append(workoutTileP);
     workoutTile.classList.add('workoutTiles');
-    workoutTile.addEventListener('click', () => selectWorkout(workout.WORKOUT_ID));
+    workoutTile.addEventListener('click', () => selectWorkout(workout));
     global.workoutList.append(workoutTile);
   }
 }
@@ -259,8 +289,9 @@ function showAllWorkouts(workouts) {
 async function fetchWorkouts(id) {
   const response = await fetch(`data/profiles/workouts/${id}`);
   let workouts;
+  let workoutExercises;
   if (response.ok) {
-    workouts = await response.json();
+    ({ workouts, workoutExercises } = await response.json());
 
     // Save the current user ID in the global variable
     global.currentUserId = id;
@@ -268,6 +299,7 @@ async function fetchWorkouts(id) {
 
     fetchExercises();
     showAllWorkouts(workouts);
+    console.log(workoutExercises, 'workout exercises');
     global.fetchWorkoutCheck = true;
     console.log(workouts, id, 'logged in');
   } else {
@@ -280,26 +312,17 @@ function getNewWorkoutForm() {
   const workoutExercises = Array.from(global.selectedExercises.children).map((exercise) => {
     const exerciseNameElement = exercise.querySelector('p');
     const exerciseName = exerciseNameElement.textContent.trim();
-    const inputsAndSelects = exercise.querySelectorAll('input, select');
-    let exerciseTimeInput = Number(inputsAndSelects[0].value);
-    const exerciseTimeUnit = inputsAndSelects[1].value;
-    let restTimeInput = Number(inputsAndSelects[2].value);
-    const restTimeUnit = inputsAndSelects[3].value;
+    const inputsAndSelects = exercise.querySelectorAll('input');
+    const exerciseTimeInput = Number(inputsAndSelects[0].value);
+    const restTimeInput = Number(inputsAndSelects[1].value);
 
-    // Convert minutes to seconds
-    if (exerciseTimeUnit === 'min') {
-      exerciseTimeInput *= 60;
-    }
-    if (restTimeUnit === 'min') {
-      restTimeInput *= 60;
-    }
 
     // Check if any of the values are empty
-    if (!exerciseName || !exerciseTimeInput || !exerciseTimeUnit || !restTimeInput || !restTimeUnit) {
+    if (!exerciseName || !exerciseTimeInput || !restTimeInput) {
       global.incompleteFormError.classList.remove('hide');
     } else {
       global.incompleteFormError.classList.add('hide');
-      return { exerciseTimeInput, exerciseTimeUnit, restTimeInput, restTimeUnit, exerciseName };
+      return { exerciseTimeInput, restTimeInput, exerciseName };
     }
     return null;
   });
@@ -316,14 +339,18 @@ function verifyNewWorkout() {
   if (global.workoutName.value === '' || global.workoutDesc.value === '') {
     global.workoutDescError.classList.remove('hide');
   } else if (workoutExercises.length !== 0 && workoutExercises !== null) {
-    global.workoutDescError.classList.add('hide');
-    const payload = {
-      workoutName: global.workoutName.value,
-      workoutDesc: global.workoutDesc.value,
-      workoutExercises,
-      totalDuration,
-    };
-    return payload;
+    if (totalDuration <= 3600) {
+      global.workoutDescError.classList.add('hide');
+      const payload = {
+        workoutName: global.workoutName.value,
+        workoutDesc: global.workoutDesc.value,
+        workoutExercises,
+        totalDuration,
+      };
+      return payload;
+    } else {
+      global.workoutTimeError.classList.remove('hide');
+    }
   } else if (workoutExercises.length === 0) {
     global.noExercisesError.classList.remove('hide');
   }
@@ -343,6 +370,7 @@ async function createNewWorkout(id) {
     if (response.ok) {
       const newWorkout = await response.json();
       console.log(id, newWorkout);
+      navigateTo('/home');
     } else {
       console.log('failed to create workout', response);
     }
@@ -424,6 +452,7 @@ function prepareHandles() {
   global.createWorkoutBtn = document.querySelector('#createWorkoutBtn');
   global.workoutList = document.querySelector('.workoutList');
   global.searchWorkout = document.querySelector('#searchWorkout');
+  global.viewWorkoutPage = document.querySelector('#viewWorkout');
 
   global.newProfileBtn = document.querySelector('#newProfileBtn');
   global.profileName = document.querySelector('#profileName');
@@ -440,6 +469,7 @@ function prepareHandles() {
   global.workoutDescError = document.querySelector('.workoutDescError');
   global.noExercisesError = document.querySelector('.noExercisesError');
   global.incompleteFormError = document.querySelector('.incompleteFormError');
+  global.workoutTimeError = document.querySelector('.workoutTimeError');
 }
 
 // Function to add event listeners

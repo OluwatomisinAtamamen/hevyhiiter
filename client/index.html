@@ -9,7 +9,7 @@
 <body>
     <header>HevyHIITer</header>
 
-    <section id="home" class="homeSec page">
+    <section id="home" class="homeSec page hide">
         <a href="/" data-link><button class="logoutBtn">Log Out</button></a>
         <a href="/createWorkout" data-link><button class="showNewWorkout">Create New Workout</button></a>
 
@@ -18,7 +18,7 @@
         <section class="workoutList"></section>
     </section>
 
-    <section id="createNewWorkout" class="createWorkoutSec page">
+    <section id="createNewWorkout" class="createWorkoutSec page hide">
         <nav class="nav">
             <a href="/home" class="navLink" data-link>Your Workouts</a>
         </nav>
@@ -30,7 +30,8 @@
         <input type="text" id="workoutDesc" placeholder="Describe your workout" required>
         <p class="workoutDescError hide">Please Enter Workout Name and Description</p>
         <p class="noExercisesError hide">Please Add Exercises to Workout</p>
-        <p class="incompleteFormError hide">Please completely fill in the Exercise and Rest Input</p>
+        <p class="workoutTimeError hide">Workout Time cannot exceed 1hour for safety reasons. Please reduce Total Workout Time</p>
+        <p class="incompleteFormError hide">Sorry! Exercise Time and Rest Time inputs must be between 1 and 60.</p>
         <section class="space"></section>
 
         <button id="clearExercises">Clear Exercises</button>
@@ -62,7 +63,7 @@
         <button id="createWorkoutBtn">Create Workout</button>
     </section>
 
-    <section id="login" class="profileSec page">
+    <section id="login" class="profileSec page hide">
         <p class="quote">Transform Your Fitness Journey</p>
         <p class="quote">Craft personalised HIIT workout tailored to your goals, accompanied by dynamic exercises and empowering progress tracking, to reach your fitness peak!</p>
         <section class="profileInput">
@@ -74,8 +75,14 @@
         <section class="profileList"></section>
     </section>
     
-    <section class="session">
+    <section id="viewWorkout" class="page hide">
+        <section class="workoutName"></section>
+        <section class="workoutDesc"></section>
+    </section>
 
+    <section id="workoutSession" class="page hide">
+        <section class="workoutSessionName"></section>
+        <section class="workoutSessionDesc"></section>
     </section>
 
     <section class="measures">

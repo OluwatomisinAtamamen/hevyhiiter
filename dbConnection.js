@@ -32,7 +32,9 @@ export async function addProfile(username) {
 export async function sendWorkouts(id) {
   const db = await dbConn;
   const workouts = await db.all('SELECT WORKOUT_ID, WORKOUT_NAME, DESCRIPTION, WORKOUT_DURATION, DATE_CREATED FROM PROFILE JOIN WORKOUT ON PROFILE.PROFILE_ID = WORKOUT.PROFILE_ID WHERE PROFILE.PROFILE_ID = ?', id);
-  return workouts;
+
+  const workoutExercises = await db.all('SELECT WORKOUT.WORKOUT_ID, WORKOUT_EXERCISE_ID, EXERCISE_NAME, EXERCISE_DURATION, REST_DURATION, MUSCLE_NAME, DIFFICULTY FROM WORKOUT JOIN WORKOUT_EXERCISE ON WORKOUT.WORKOUT_ID = WORKOUT_EXERCISE.WORKOUT_ID JOIN EXERCISE ON WORKOUT_EXERCISE.EXERCISE_ID = EXERCISE.EXERCISE_ID JOIN EXERCISE_MUSCLE ON EXERCISE.EXERCISE_ID = EXERCISE_MUSCLE.EXERCISE_ID JOIN MUSCLE_GROUP ON MUSCLE_GROUP.MUSCLE_ID = EXERCISE_MUSCLE.MUSCLE_ID WHERE WORKOUT.PROFILE_ID = ?', id);
+  return { workouts, workoutExercises };
 }
 
 export async function addWorkout(id, workoutName, workoutDesc, workoutExercises, totalDuration) {
@@ -42,8 +44,9 @@ export async function addWorkout(id, workoutName, workoutDesc, workoutExercises,
 
   for (const exercise of workoutExercises) {
     const { exerciseTimeInput, restTimeInput, exerciseName } = exercise;
-    const exerciseId = await db.get('SELECT EXERCISE_ID FROM EXERCISE WHERE EXERCISE_NAME = ?', [exerciseName]);
+    const exerciseIdObj = await db.get('SELECT EXERCISE_ID FROM EXERCISE WHERE EXERCISE_NAME = ?', [exerciseName]);
 
+    const exerciseId = exerciseIdObj.EXERCISE_ID;
     await db.run('INSERT INTO WORKOUT_EXERCISE (WORKOUT_ID, EXERCISE_ID, EXERCISE_DURATION, REST_DURATION) VALUES (?, ?, ?, ?)', [workoutID, exerciseId, exerciseTimeInput, restTimeInput]);
   }
 

@@ -38,3 +38,8 @@ For the GHIJ feature I ...
 
 >  this is an example prompt given to a chatbot
 words words words etc.
+
+
+REST - The duration of the rest period before moving on to the next exercise
+Users cannot create workouts without internet access
+if a user logs out, they need internet access to log back in
