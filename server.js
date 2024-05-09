@@ -28,15 +28,24 @@ async function getWorkouts(req, res) {
 
 async function postWorkouts(req, res) {
   try {
-    const result = await db.addWorkout(req.params.id, req.body.workoutName, req.body.workoutDesc, req.body.workoutExercises, req.body.totalDuration);
-    res.json({ WORKOUT_ID: result.lastID });
+    console.log('Received editWorkoutId:', req.body.editWorkoutId); // Log the received editWorkoutId
+
+    const result = await db.addWorkout(
+      req.params.id,
+      req.body.workoutName,
+      req.body.workoutDesc,
+      req.body.workoutExercises,
+      req.body.totalDuration,
+      req.body.editWorkoutID,
+    );
+    res.json({ WORKOUT_ID: result.workoutID });
   } catch (error) {
     console.log('Internal Server Error', error);
   }
 }
 
 async function deleteWorkout(req, res) {
-  const result = await db.deleteWorkout(req.params.userId, req.params.workoutId);
+  const result = await db.deleteWorkoutFromDatabase(req.params.userId, req.params.workoutId);
   res.json(result);
 }
 

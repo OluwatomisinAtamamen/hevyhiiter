@@ -8,9 +8,12 @@
 
 <body>
     <header>HevyHIITer</header>
+    <nav class="nav hide">
+        <a href="/home" class="navLink" data-link><button class="homeBtn">Your Workouts</button></a>
+        <a href="/" data-link><button class="logoutBtn">Log Out</button></a>
+    </nav>
 
     <section id="home" class="homeSec page hide">
-        <a href="/" data-link><button class="logoutBtn">Log Out</button></a>
         <a href="/createWorkout" data-link><button class="showNewWorkout">Create New Workout</button></a>
 
         <h2>Your Workouts</h2>
@@ -18,10 +21,7 @@
         <section class="workoutList"></section>
     </section>
 
-    <section id="createNewWorkout" class="createWorkoutSec page hide">
-        <nav class="nav">
-            <a href="/home" class="navLink" data-link>Your Workouts</a>
-        </nav>
+    <section id="createWorkout" class="createWorkoutSec page hide">
 
         <label for="workoutName">Workout Name:</label>
         <input type="text" id="workoutName" placeholder="Enter Workout Name" required>
@@ -60,7 +60,7 @@
         <section class="exerciseList">
         </section>
 
-        <button id="createWorkoutBtn">Create Workout</button>
+        <button id="saveWorkoutBtn">Save Workout</button>
     </section>
 
     <section id="login" class="profileSec page hide">
@@ -78,17 +78,15 @@
     <section id="viewWorkout" class="page hide">
         <section class="workoutName"></section>
         <section class="workoutDesc"></section>
-        <a href="/home" data-link><button class="editWorkout">Edit Workout</button></a>
-        <a href="/home" data-link><button class="deleteWorkout">Delete Workout</button></a>
     </section>
 
     <section id="workoutSession" class="page hide">
         <section class="workoutSessionName"></section>
         <section class="workoutSessionDesc"></section>
-    </section>
-
-    <section class="measures">
-
+        <section id="timerSection" class="timer hide">
+            <span class="timerValue"></span>
+            <span class="timerLabel"></span>
+        </section>
     </section>
 </body>
 </html>

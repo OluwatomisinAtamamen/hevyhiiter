@@ -1,7 +1,9 @@
 // import { sampleWorkouts } from './sampleWorkouts.mjs';
 
 // Global Variable
-const global = { };
+const global = {
+  navBar: document.querySelector('.nav'),
+};
 
 // Function to navigate to a specific URL
 function navigateTo(url) {
@@ -26,6 +28,7 @@ function handleHomeSection() {
   if (currentUserId) {
     global.currentUserId = currentUserId;
     showSection('#home');
+    showNavBar();
 
     // Check if the workouts have been fetched
     if (!(global.fetchWorkoutCheck)) {
@@ -52,7 +55,8 @@ function handleCreateWorkoutSection() {
   const currentUserId = localStorage.getItem('currentUserId');
   if (currentUserId) {
     global.currentUserId = currentUserId;
-    showSection('#createNewWorkout');
+    showSection('#createWorkout');
+    showNavBar();
     fetchExercises();
   } else {
     navigateTo('/');
@@ -61,21 +65,23 @@ function handleCreateWorkoutSection() {
 
 function handleWorkoutSessionSection() {
   const currentUserId = localStorage.getItem('currentUserId');
-  if (currentUserId) {
+  if (currentUserId && global.currentWorkout) {
     global.currentUserId = currentUserId;
     showSection('#workoutSession');
+    showNavBar();
   } else {
-    navigateTo('/');
+    navigateTo('/home');
   }
 }
 
 function handleViewWorkoutSection() {
   const currentUserId = localStorage.getItem('currentUserId');
-  if (currentUserId) {
+  if (currentUserId && global.currentWorkout) {
     global.currentUserId = currentUserId;
     showSection('#viewWorkout');
+    showNavBar();
   } else {
-    navigateTo('/');
+    navigateTo('/home');
   }
 }
 
@@ -108,6 +114,20 @@ function router() {
 
   // Call the view function of the matched route
   match.route.view();
+}
+
+// Function to search workout and exericse list
+function searchList(query, list) {
+  const lowerCaseQuery = query.toLowerCase();
+  const items = Array.from(list.children);
+  for (const item of items) {
+    const itemName = item.textContent.toLowerCase();
+    if (itemName.includes(lowerCaseQuery)) {
+      item.style.display = '';
+    } else {
+      item.style.display = 'none';
+    }
+  }
 }
 
 // Function to clear exercises
@@ -168,20 +188,8 @@ function selectExercise(exerciseName) {
 
   selectedExercise.append(exerciseNameElement, exerciseTimeInput, timerUnit, restTimeInput, timerUnit, removeBtn);
   global.selectedExercises.append(selectedExercise);
-}
 
-// Function to search exercise list
-function searchExerciseList() {
-  const query = global.searchExercise.value.toLowerCase();
-  const exercises = Array.from(global.exerciseList.children);
-  for (const exercise of exercises) {
-    const exerciseName = exercise.textContent.toLowerCase();
-    if (exerciseName.includes(query)) {
-      exercise.style.display = '';
-    } else {
-      exercise.style.display = 'none';
-    }
-  }
+  return selectedExercise;
 }
 
 // Function to filter exercises by muscle
@@ -238,44 +246,98 @@ async function fetchExercises() {
   }
 }
 
-async function deleteWorkout(workoutId) {
-  const response = await fetch(`data/profiles/workouts/${global.currentUserId}/${workoutId}`, {
-    method: 'DELETE',
-  });
 
-  if (response.ok) {
-    console.log('workout deleted', workoutId);
-    navigateTo('/home');
-    location.reload(true);
-  } else {
-    console.log('failed to delete workout', response);
+function runTimer(duration, isExercise, callback) {
+  let remainingTime = duration;
+  let timerInterval;
+
+  function updateTimer() {
+    global.timerSection.classList.remove('hide');
+    global.timerValue.textContent = remainingTime;
+    global.timerLabel.textContent = isExercise ? 'Exercise' : 'Rest';
+
+    timerInterval = setInterval(() => {
+      remainingTime--;
+      global.timerValue.textContent = remainingTime;
+
+      if (remainingTime === 0) {
+        clearInterval(timerInterval);
+        global.timerSection.classList.add('hide');
+        callback();
+      }
+    }, 1000);
   }
+
+  const pauseTimer = () => {
+    clearInterval(timerInterval);
+  };
+
+  const resumeTimer = () => {
+    timerInterval = setInterval(() => {
+      remainingTime--;
+      global.timerValue.textContent = remainingTime;
+
+      if (remainingTime === 0) {
+        clearInterval(timerInterval);
+        global.timerSection.classList.add('hide');
+        callback();
+      }
+    }, 1000);
+  };
+
+  updateTimer();
+
+  return { pauseTimer, resumeTimer };
 }
 
-// Function to search workout list
-function searchWorkoutList() {
-  const query = global.searchWorkout.value.toLowerCase();
-  const workouts = Array.from(global.workoutList.children);
-  for (const workout of workouts) {
-    const workoutName = workout.textContent.toLowerCase();
-    if (workoutName.includes(query)) {
-      workout.style.display = '';
+function startWorkout(workout) {
+  const workoutDetails = global.workoutExerciseDetails.filter(
+    (details) => details.WORKOUT_ID === workout.WORKOUT_ID);
+  console.log(workoutDetails, 'workout details');
+
+  let currentExerciseIndex = 0;
+
+  const handleNextExercise = () => {
+    if (currentExerciseIndex < workoutDetails.length) {
+      const { EXERCISE_DURATION, REST_DURATION } = workoutDetails[currentExerciseIndex];
+
+      const exerciseTimer = runTimer(EXERCISE_DURATION, true, handleRestPeriod);
+      const restTimer = runTimer(REST_DURATION, false, handleNextExercise);
+
+      const pauseExerciseTimer = exerciseTimer.pauseTimer;
+      const resumeExerciseTimer = exerciseTimer.resumeTimer;
+
+      // Add event listeners for pause and resume buttons
+      global.addEventListener('click', (e) => {
+        if (e.target.matches('.pause-timer')) {
+          pauseExerciseTimer();
+        } else if (e.target.matches('.resume-timer')) {
+          resumeExerciseTimer();
+        }
+      });
+
+      currentExerciseIndex++;
     } else {
-      workout.style.display = 'none';
+      // Workout completed
+      console.log('Workout completed');
     }
-  }
-}
+  };
 
-function startWorkout(workoutId) {
-  console.log(workoutId);
+  const handleRestPeriod = () => {
+    handleNextExercise();
+  };
+
+  handleNextExercise();
+
   navigateTo('/workoutSession');
 }
 
 // Function to select a workout
 function selectWorkout(workout) {
   global.viewWorkoutPage.innerHTML = '';
-  console.log(global.currentWorkoutID, 'current workout');
   console.log(workout);
+  global.currentWorkout = workout;
+
   const startWorkoutBtn = document.createElement('button');
   const editWorkoutBtn = document.createElement('button');
   const deleteWorkoutBtn = document.createElement('button');
@@ -284,9 +346,12 @@ function selectWorkout(workout) {
   editWorkoutBtn.textContent = 'Edit Workout';
   deleteWorkoutBtn.textContent = 'Delete Workout';
 
-  startWorkoutBtn.addEventListener('click', () => startWorkout(workout.WORKOUT_ID));
-  // editWorkoutBtn.addEventListener('click', () => navigateTo('/createWorkout'));
-  deleteWorkoutBtn.addEventListener('click', () => deleteWorkout(workout.WORKOUT_ID));
+  startWorkoutBtn.addEventListener('click', () => startWorkout(workout));
+  editWorkoutBtn.addEventListener('click', () => editWorkout(workout));
+  deleteWorkoutBtn.addEventListener('click', async () => {
+    await deleteWorkout(workout.WORKOUT_ID);
+    navigateTo('/home');
+  });
   global.viewWorkoutPage.append(startWorkoutBtn, editWorkoutBtn, deleteWorkoutBtn);
   navigateTo('/viewWorkout');
 }
@@ -308,9 +373,9 @@ function showAllWorkouts(workouts) {
 async function fetchWorkouts(id) {
   const response = await fetch(`data/profiles/workouts/${id}`);
   let workouts;
-  let workoutExercises;
+  let workoutExerciseDetails;
   if (response.ok) {
-    ({ workouts, workoutExercises } = await response.json());
+    ({ workouts, workoutExerciseDetails } = await response.json());
 
     // Save the current user ID in the global variable
     global.currentUserId = id;
@@ -318,11 +383,12 @@ async function fetchWorkouts(id) {
 
     fetchExercises();
     showAllWorkouts(workouts);
-    console.log(workoutExercises, 'workout exercises');
+    global.workoutExerciseDetails = workoutExerciseDetails;
+    console.log(workoutExerciseDetails, 'workout exercises');
     global.fetchWorkoutCheck = true;
     console.log(workouts, id, 'logged in');
   } else {
-    console.log('failed to load workouts', response);
+    console.log('You have to be online', response);
   }
 }
 
@@ -375,23 +441,63 @@ function verifyNewWorkout() {
 }
 
 // Function to create a new workout
-async function createNewWorkout(id) {
+async function saveWorkout(id) {
   const payload = verifyNewWorkout();
-  console.log(payload, 'payload');
+  // Set editWorkoutID explicitly
+  payload.editWorkoutID = global.editWorkoutID || null;
+
+  console.log(JSON.stringify(payload)); // Log the stringified payload
+
   if (payload) {
     const response = await fetch(`data/profiles/workouts/${id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ ...payload, editWorkoutID: payload.editWorkoutID }), // Spread payload and explicitly include editWorkoutID
     });
 
     if (response.ok) {
       const newWorkout = await response.json();
       console.log(id, newWorkout);
       navigateTo('/home');
+      global.editWorkoutID = null;
     } else {
       console.log('failed to create workout', response);
     }
+  }
+}
+
+// Function to edit a workout
+function editWorkout(workout) {
+  global.editWorkoutID = workout.WORKOUT_ID;
+  global.workoutName.value = workout.WORKOUT_NAME;
+  global.workoutDesc.value = workout.DESCRIPTION;
+  global.selectedExercises.innerHTML = '';
+
+  const workoutDetails = global.workoutExerciseDetails.filter(
+    (details) => details.WORKOUT_ID === workout.WORKOUT_ID,
+  );
+
+  workoutDetails.forEach((exercise) => {
+    const exerciseSection = selectExercise(exercise.EXERCISE_NAME);
+    const inputs = exerciseSection.querySelectorAll('input');
+    inputs[0].value = exercise.EXERCISE_DURATION;
+    inputs[1].value = exercise.REST_DURATION;
+  });
+
+  navigateTo('/createWorkout');
+}
+
+async function deleteWorkout(workoutId) {
+  const response = await fetch(`data/profiles/workouts/${global.currentUserId}/${workoutId}`, {
+    method: 'DELETE',
+  });
+
+  if (response.ok) {
+    console.log('workout deleted', workoutId);
+    navigateTo('/home');
+    location.reload(true);
+  } else {
+    console.log('failed to delete workout', response);
   }
 }
 
@@ -457,20 +563,41 @@ async function fetchAllProfiles() {
   console.log(global.profileArray, 'all profiles');
 }
 
+// Function to show navigation bar if a user is logged in
+function showNavBar() {
+  global.navBar.classList.remove('hide');
+}
+
 // Function to log out
 function logOut() {
   localStorage.removeItem('currentUserId');
 }
+
+// Function to warn the user before reloading
+function warnBeforeReload(event) {
+  const currentRoute = location.pathname;
+  if (currentRoute === '/viewWorkout' || currentRoute === '/workoutSession') {
+    const confirmMessage = 'Reloading this page will reset your selected workout. Are you sure you want to reload?';
+    event.returnValue = confirmMessage; // For most browsers
+    return confirmMessage; // For some older browsers
+  }
+}
+
 
 // Function to prepare handles
 function prepareHandles() {
   global.showNewWorkoutBtn = document.querySelector('.showNewWorkout');
   global.workoutName = document.querySelector('#workoutName');
   global.workoutDesc = document.querySelector('#workoutDesc');
-  global.createWorkoutBtn = document.querySelector('#createWorkoutBtn');
+  global.saveWorkoutBtn = document.querySelector('#saveWorkoutBtn');
   global.workoutList = document.querySelector('.workoutList');
   global.searchWorkout = document.querySelector('#searchWorkout');
   global.viewWorkoutPage = document.querySelector('#viewWorkout');
+
+  global.workoutSessionSection = document.querySelector('#workoutSession');
+  global.timerSection = document.querySelector('#timerSection');
+  global.timerValue = document.querySelector('.timerValue');
+  global.timeLabel = document.querySelector('.timeLabel');
 
   global.newProfileBtn = document.querySelector('#newProfileBtn');
   global.profileName = document.querySelector('#profileName');
@@ -499,7 +626,7 @@ function addEventListeners() {
     }
   });
 
-  global.createWorkoutBtn.addEventListener('click', () => createNewWorkout(global.currentUserId));
+  global.saveWorkoutBtn.addEventListener('click', () => saveWorkout(global.currentUserId));
   if (global.currentWorkoutID) {
     global.deleteWorkoutBtn.addEventListener('click', () => deleteWorkout(global.currentWorkoutID));
   }
@@ -508,8 +635,8 @@ function addEventListeners() {
   global.logoutBtn.addEventListener('click', logOut);
 
   global.selectMuscle.addEventListener('change', muscleFilter);
-  global.searchExercise.addEventListener('input', searchExerciseList);
-  global.searchWorkout.addEventListener('input', searchWorkoutList);
+  global.searchExercise.addEventListener('input', () => searchList(global.searchExercise.value, global.exerciseList));
+  global.searchWorkout.addEventListener('input', () => searchList(global.searchWorkout.value, global.workoutList));
   global.clearExercises.addEventListener('click', clearExercises);
 }
 
@@ -522,6 +649,7 @@ function pageLoaded() {
   prepareHandles();
   addEventListeners();
   fetchAllProfiles();
+  window.addEventListener('beforeunload', warnBeforeReload);
 }
 
 // Call the pageLoaded function when the page is loaded
