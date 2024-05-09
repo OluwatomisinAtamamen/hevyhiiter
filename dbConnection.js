@@ -35,7 +35,7 @@ export async function sendWorkouts(id) {
                                  JOIN WORKOUT ON PROFILE.PROFILE_ID = WORKOUT.PROFILE_ID 
                                  WHERE PROFILE.PROFILE_ID = ?`, id);
 
-  const workoutExerciseDetails = await db.all(`SELECT WORKOUT.WORKOUT_ID, WORKOUT_EXERCISE_ID, EXERCISE_NAME, EXERCISE_DURATION, REST_DURATION FROM WORKOUT 
+  const workoutExerciseDetails = await db.all(`SELECT WORKOUT.WORKOUT_ID, WORKOUT_EXERCISE_ID, EXERCISE_NAME, EXERCISE_DURATION, REST_DURATION, EXERCISE.DESCRIPTION FROM WORKOUT 
                                                JOIN WORKOUT_EXERCISE ON WORKOUT.WORKOUT_ID = WORKOUT_EXERCISE.WORKOUT_ID 
                                                JOIN EXERCISE ON WORKOUT_EXERCISE.EXERCISE_ID = EXERCISE.EXERCISE_ID 
                                                WHERE WORKOUT.PROFILE_ID = ?`, id);
@@ -58,7 +58,6 @@ export async function addWorkout(id, workoutName, workoutDesc, workoutExercises,
 
       await db.run('INSERT INTO WORKOUT_EXERCISE (WORKOUT_ID, EXERCISE_ID, EXERCISE_DURATION, REST_DURATION) VALUES (?, ?, ?, ?)', [workoutId, exerciseId, exerciseTimeInput, restTimeInput]);
     }
-    console.log('create', workoutId);
     return { workoutId };
   } else {
     // Edit an existing workout
@@ -92,7 +91,7 @@ export async function deleteWorkoutFromDatabase(userId, workoutId) {
 // Retrieve all exercises from the database
 export async function sendExercises() {
   const db = await dbConn;
-  const exercises = await db.all("SELECT EXERCISE_NAME, DESCRIPTION FROM EXERCISE WHERE EXERCISE_NAME != 'Rest' ORDER BY EXERCISE_NAME ASC");
+  const exercises = await db.all("SELECT EXERCISE_NAME FROM EXERCISE WHERE EXERCISE_NAME != 'Rest' ORDER BY EXERCISE_NAME ASC");
   return exercises;
 }
 

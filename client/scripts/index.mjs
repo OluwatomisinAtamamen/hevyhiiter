@@ -332,19 +332,47 @@ function startWorkout(workout) {
   navigateTo('/workoutSession');
 }
 
-// Function to select a workout
-function selectWorkout(workout) {
-  global.viewWorkoutPage.innerHTML = '';
+function viewWorkoutPageExerciseList(workout) {
+  const workoutDetails = global.workoutExerciseDetails.filter(
+    (details) => details.WORKOUT_ID === workout.WORKOUT_ID,
+  );
+
+  const exerciseList = document.createElement('ul');
+
+  for (const exercise of workoutDetails) {
+    const exerciseItem = document.createElement('li');
+    const exerciseName = document.createElement('p');
+    const exerciseDuration = document.createElement('p');
+    const restDuration = document.createElement('p');
+
+    exerciseName.textContent = exercise.EXERCISE_NAME;
+    exerciseDuration.textContent = `Exercise Duration: ${exercise.EXERCISE_DURATION} secs`;
+    restDuration.textContent = `Rest Duration: ${exercise.REST_DURATION} secs`;
+
+    exerciseItem.append(exerciseName, exerciseDuration, restDuration);
+    exerciseList.append(exerciseItem);
+  }
+
+  return exerciseList;
+}
+
+// Function to view a selected workout
+function viewWorkout(workout) {
+  global.viewWorkoutButtons.innerHTML = '';
   console.log(workout);
   global.currentWorkout = workout;
 
   const startWorkoutBtn = document.createElement('button');
   const editWorkoutBtn = document.createElement('button');
   const deleteWorkoutBtn = document.createElement('button');
+  const exerciseHeading = document.createElement('h3');
 
   startWorkoutBtn.textContent = 'Start Workout';
   editWorkoutBtn.textContent = 'Edit Workout';
   deleteWorkoutBtn.textContent = 'Delete Workout';
+  global.selectedWorkoutName.textContent = workout.WORKOUT_NAME;
+  global.selectedWorkoutDesc.textContent = workout.DESCRIPTION;
+  exerciseHeading.textContent = 'Exercises';
 
   startWorkoutBtn.addEventListener('click', () => startWorkout(workout));
   editWorkoutBtn.addEventListener('click', () => editWorkout(workout));
@@ -352,7 +380,15 @@ function selectWorkout(workout) {
     await deleteWorkout(workout.WORKOUT_ID);
     navigateTo('/home');
   });
-  global.viewWorkoutPage.append(startWorkoutBtn, editWorkoutBtn, deleteWorkoutBtn);
+
+  global.viewWorkoutButtons.append(startWorkoutBtn, editWorkoutBtn, deleteWorkoutBtn);
+  global.viewWorkoutPage.append(
+    global.selectedWorkoutName,
+    global.viewWorkoutButtons,
+    global.selectedWorkoutDesc,
+    exerciseHeading,
+    viewWorkoutPageExerciseList(workout),
+  );
   navigateTo('/viewWorkout');
 }
 
@@ -364,7 +400,7 @@ function showAllWorkouts(workouts) {
     workoutTileP.textContent = workout.WORKOUT_NAME;
     workoutTile.append(workoutTileP);
     workoutTile.classList.add('workoutTiles');
-    workoutTile.addEventListener('click', () => selectWorkout(workout));
+    workoutTile.addEventListener('click', () => viewWorkout(workout));
     global.workoutList.append(workoutTile);
   }
 }
@@ -577,7 +613,7 @@ function logOut() {
 // Function to warn the user before reloading
 function warnBeforeReload(event) {
   const currentRoute = location.pathname;
-  if (currentRoute === '/viewWorkout' || currentRoute === '/workoutSession') {
+  if (currentRoute === '/viewWorkout' || currentRoute === '/workoutSession' || currentRoute === '/createWorkout') {
     const confirmMessage = 'Reloading this page will reset your selected workout. Are you sure you want to reload?';
     event.returnValue = confirmMessage; // For most browsers
     return confirmMessage; // For some older browsers
@@ -593,7 +629,11 @@ function prepareHandles() {
   global.saveWorkoutBtn = document.querySelector('#saveWorkoutBtn');
   global.workoutList = document.querySelector('.workoutList');
   global.searchWorkout = document.querySelector('#searchWorkout');
+
   global.viewWorkoutPage = document.querySelector('#viewWorkout');
+  global.viewWorkoutButtons = document.querySelector('.viewWorkoutButtons');
+  global.selectedWorkoutName = document.querySelector('.selectedWorkoutName');
+  global.selectedWorkoutDesc = document.querySelector('.selectedWorkoutDesc');
 
   global.workoutSessionSection = document.querySelector('#workoutSession');
   global.timerSection = document.querySelector('#timerSection');
