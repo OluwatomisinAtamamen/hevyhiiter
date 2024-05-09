@@ -1,4 +1,4 @@
-// import { sampleWorkouts } from './sampleWorkouts.mjs';
+import * as sample from './sampleWorkouts.mjs';
 
 // Global Variable
 const global = {
@@ -299,16 +299,15 @@ function startWorkout(workout) {
 
   const handleNextExercise = () => {
     if (currentExerciseIndex < workoutDetails.length) {
-      const { EXERCISE_DURATION, REST_DURATION } = workoutDetails[currentExerciseIndex];
+      const { EXERCISE_DURATION } = workoutDetails[currentExerciseIndex]; // Remove REST_DURATION since it's not used
 
-      const exerciseTimer = runTimer(EXERCISE_DURATION, true, handleRestPeriod);
-      const restTimer = runTimer(REST_DURATION, false, handleNextExercise);
+      const exerciseTimer = runTimer(EXERCISE_DURATION, true, handleRestPeriod); // Only create exerciseTimer
 
       const pauseExerciseTimer = exerciseTimer.pauseTimer;
       const resumeExerciseTimer = exerciseTimer.resumeTimer;
 
       // Add event listeners for pause and resume buttons
-      global.addEventListener('click', (e) => {
+      document.addEventListener('click', (e) => {
         if (e.target.matches('.pause-timer')) {
           pauseExerciseTimer();
         } else if (e.target.matches('.resume-timer')) {
@@ -322,6 +321,7 @@ function startWorkout(workout) {
       console.log('Workout completed');
     }
   };
+
 
   const handleRestPeriod = () => {
     handleNextExercise();
@@ -441,18 +441,15 @@ function verifyNewWorkout() {
 }
 
 // Function to create a new workout
-async function saveWorkout(id) {
-  const payload = verifyNewWorkout();
+async function saveWorkout(id, payload) {
   // Set editWorkoutID explicitly
   payload.editWorkoutID = global.editWorkoutID || null;
-
-  console.log(JSON.stringify(payload)); // Log the stringified payload
 
   if (payload) {
     const response = await fetch(`data/profiles/workouts/${id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...payload, editWorkoutID: payload.editWorkoutID }), // Spread payload and explicitly include editWorkoutID
+      body: JSON.stringify({ ...payload, editWorkoutID: payload.editWorkoutID }),
     });
 
     if (response.ok) {
@@ -537,6 +534,10 @@ async function createProfile() {
 
     if (response.ok) {
       const newProfile = await response.json();
+
+      const sampleWorkout = sample.sampleWorkouts;
+      await saveWorkout(newProfile.PROFILE_ID, sampleWorkout);
+
       await fetchWorkouts(newProfile.PROFILE_ID);
       handleHomeSection();
       console.log(newProfile);
@@ -615,6 +616,10 @@ function prepareHandles() {
   global.noExercisesError = document.querySelector('.noExercisesError');
   global.incompleteFormError = document.querySelector('.incompleteFormError');
   global.workoutTimeError = document.querySelector('.workoutTimeError');
+
+  global.timerSection = document.querySelector('#timerSection');
+  global.timerValue = document.querySelector('.timerValue');
+  global.timerLabel = document.querySelector('.timerLabel');
 }
 
 // Function to add event listeners
@@ -626,7 +631,11 @@ function addEventListeners() {
     }
   });
 
-  global.saveWorkoutBtn.addEventListener('click', () => saveWorkout(global.currentUserId));
+  global.saveWorkoutBtn.addEventListener('click', () => {
+    const payload = verifyNewWorkout();
+    saveWorkout(global.currentUserId, payload);
+  });
+
   if (global.currentWorkoutID) {
     global.deleteWorkoutBtn.addEventListener('click', () => deleteWorkout(global.currentWorkoutID));
   }
