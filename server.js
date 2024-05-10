@@ -8,6 +8,12 @@ const app = express();
 // Serve files from the 'client' directory
 app.use(express.static('client'));
 
+/**
+ * Sends all profiles from the database.
+ *
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ */
 async function getProfiles(req, res) {
   res.json(await db.sendProfiles());
 }
@@ -17,6 +23,12 @@ async function postProfile(req, res) {
   res.json({ PROFILE_ID: result.lastID });
 }
 
+/**
+ * Sends all workouts for a specific profile from the database.
+ *
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ */
 async function getWorkouts(req, res) {
   const workouts = await db.sendWorkouts(req.params.id);
   if (workouts) {
@@ -26,6 +38,12 @@ async function getWorkouts(req, res) {
   }
 }
 
+/**
+ * Adds a new workout to the database.
+ *
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ */
 async function postWorkouts(req, res) {
   try {
     console.log('Received editWorkoutId:', req.body.editWorkoutId); // Log the received editWorkoutId
@@ -44,15 +62,33 @@ async function postWorkouts(req, res) {
   }
 }
 
+/**
+ * Deletes a workout from the database.
+ *
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ */
 async function deleteWorkout(req, res) {
   const result = await db.deleteWorkoutFromDatabase(req.params.userId, req.params.workoutId);
   res.json(result);
 }
 
+/**
+ * Sends all exercises from the database.
+ *
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ */
 async function getExercises(req, res) {
   res.json(await db.sendExercises());
 }
 
+/**
+ * Sends all exercises for a specific muscle group from the database.
+ *
+ * @param {express.Request} req - The request object.
+ * @param {express.Response} res - The response object.
+ */
 async function getExercisesByMuscle(req, res) {
   res.json(await db.sendExercisesByMuscle(req.params.muscleName));
 }
@@ -70,4 +106,4 @@ app.get('/*', (req, res) => {
 });
 
 // make the server available on the network
-app.listen(8081);
+app.listen(8080);

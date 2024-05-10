@@ -5,24 +5,37 @@ const global = {
   navBar: document.querySelector('.nav'),
 };
 
-// Function to navigate to a specific URL
+/**
+ * @function navigateTo
+ * @description Function to navigate to a specific URL
+ * @param {string} url - The URL to navigate to
+ */
 function navigateTo(url) {
   history.pushState(null, null, url);
   router();
 }
 
-// Hide all pages
+/**
+ * @function hideAllSections
+ * @description Function to hide all pages
+ */
 function hideAllSections() {
   document.querySelectorAll('.page').forEach(section => section.classList.add('hide'));
 }
 
-// Show a specific section
+/**
+ * @function showSection
+ * @description Function to show a specific section
+ * @param {string} selector - The CSS selector for the section to show
+ */
 function showSection(selector) {
   hideAllSections();
   document.querySelector(selector).classList.remove('hide');
 }
 
-// Handle the home section
+/**
+ * Handles the home section by checking if the user is logged in and fetching workouts if necessary.
+ */
 function handleHomeSection() {
   const currentUserId = localStorage.getItem('currentUserId');
   if (currentUserId) {
@@ -39,7 +52,9 @@ function handleHomeSection() {
   }
 }
 
-// Handle the login section
+/**
+ * Handles the login section by checking if the user is logged in and navigating to the home page if necessary.
+ */
 function handleLoginSection() {
   const currentUserId = localStorage.getItem('currentUserId');
   if (currentUserId) {
@@ -50,7 +65,9 @@ function handleLoginSection() {
   }
 }
 
-// Handle the create workout section
+/**
+ * Handles the create workout section by checking if the user is logged in and fetching exercises if necessary.
+ */
 function handleCreateWorkoutSection() {
   const currentUserId = localStorage.getItem('currentUserId');
   if (currentUserId) {
@@ -63,6 +80,9 @@ function handleCreateWorkoutSection() {
   }
 }
 
+/**
+ * Handles the workout session section by checking if the user is logged in and a workout is selected.
+ */
 function handleWorkoutSessionSection() {
   const currentUserId = localStorage.getItem('currentUserId');
   if (currentUserId && global.currentWorkout) {
@@ -74,6 +94,9 @@ function handleWorkoutSessionSection() {
   }
 }
 
+/**
+ * Handles the view workout section by checking if the user is logged in and a workout is selected.
+ */
 function handleViewWorkoutSection() {
   const currentUserId = localStorage.getItem('currentUserId');
   if (currentUserId && global.currentWorkout) {
@@ -85,7 +108,9 @@ function handleViewWorkoutSection() {
   }
 }
 
-// Router function to handle different routes
+/**
+ * Router function to handle different routes.
+ */
 function router() {
   const routes = [
     { path: '/', view: () => handleLoginSection() },
@@ -116,7 +141,13 @@ function router() {
   match.route.view();
 }
 
-// Function to search workout and exericse list
+
+/**
+ * Searches a list for a query and hides items that do not match the query.
+ *
+ * @param {string} query - The search query.
+ * @param {HTMLElement} list - The list to search.
+ */
 function searchList(query, list) {
   const lowerCaseQuery = query.toLowerCase();
   const items = Array.from(list.children);
@@ -130,7 +161,9 @@ function searchList(query, list) {
   }
 }
 
-// Function to clear exercises
+/**
+ * Clears the selected exercises.
+ */
 function clearExercises() {
   global.selectedExercises.innerHTML = '';
 }
@@ -153,7 +186,11 @@ function createTimerInputAndUnit() {
   return { timerInput };
 }
 
-// Function to remove an exercise
+/**
+ * Removes an exercise when the remove button is clicked.
+ *
+ * @param {Event} event - The click event.
+ */
 function removeExercise(event) {
   // Get the button that was clicked
   const removeBtn = event.target;
@@ -165,10 +202,16 @@ function removeExercise(event) {
   exerciseSection.remove();
 }
 
-// Function to select an exercise
+/**
+ * Selects an exercise and adds it to the selected exercises.
+ *
+ * @param {string} exerciseName - The name of the exercise to select.
+ * @returns {HTMLElement} The selected exercise element.
+ */
 function selectExercise(exerciseName) {
   const selectedExercise = document.createElement('section');
   const removeBtn = document.createElement('button');
+  removeBtn.textContent = 'Remove';
   removeBtn.classList.add('removeBtn');
   removeBtn.addEventListener('click', removeExercise);
 
@@ -188,6 +231,7 @@ function selectExercise(exerciseName) {
 
   selectedExercise.append(exerciseNameElement, exerciseTimeInput, timerUnit, restTimeInput, timerUnit, removeBtn);
   global.selectedExercises.append(selectedExercise);
+  global.selectedExercises.classList.add('groupedExercises');
 
   return selectedExercise;
 }
@@ -204,7 +248,11 @@ function muscleFilter() {
   }
 }
 
-// Function to show all exercises
+/**
+ * Shows all exercises in the exercise list.
+ *
+ * @param {Array} exercises - An array of exercise objects.
+ */
 function showAllExercises(exercises) {
   // Clear the existing exercise list
   global.exerciseList.innerHTML = '';
@@ -220,7 +268,11 @@ function showAllExercises(exercises) {
   }
 }
 
-// Function to fetch exercises by muscle
+/**
+ * Fetches exercises by muscle group from the server.
+ *
+ * @param {string} muscleName - The name of the muscle group.
+ */
 async function fetchExercisesByMuscle(muscleName) {
   const response = await fetch(`data/exercises/by-muscle/${muscleName}`);
   let exercises;
@@ -242,11 +294,19 @@ async function fetchExercises() {
     console.log(exercises, 'success');
     showAllExercises(exercises);
   } else {
-    console.log('failed to load exercises', response);
+    global.noInternet.classList.remove('hide');
   }
 }
 
-
+/**
+ * @function runTimer
+ * @description Function to run a timer for a specified duration
+ * @param {number} duration - The duration of the timer in seconds
+ * @param {boolean} isExercise - Flag indicating if the timer is for an exercise or rest period
+ * @param {Function} callback - Callback function to be called when the timer finishes
+ * @param {Function} restCallback - Callback function to be called when the timer finishes, specifically for rest periods
+ * @returns {{pauseTimer: Function, resumeTimer: Function}} - Object containing functions to pause and resume the timer
+ */
 function runTimer(duration, isExercise, callback, restCallback) {
   let remainingTime = duration;
   let timerInterval;
@@ -297,6 +357,12 @@ function runTimer(duration, isExercise, callback, restCallback) {
   return { pauseTimer, resumeTimer };
 }
 
+/**
+ * @function startCountdown
+ * @description Function to start a countdown timer
+ * @param {number} duration - The duration of the countdown in seconds
+ * @param {Function} callback - Callback function to be called when the countdown finishes
+ */
 function startWorkout(workout) {
   const workoutDetails = global.workoutExerciseDetails.filter(
     (details) => details.WORKOUT_ID === workout.WORKOUT_ID,
@@ -371,8 +437,8 @@ function startWorkout(workout) {
 
       currentExerciseIndex++;
     } else {
-      // Workout completed
-      console.log('Workout completed');
+      global.workoutSessionSection.innerHTML = '';
+      global.workoutSessionSection.textContent = 'Workout Completed';
     }
   };
 
@@ -395,6 +461,11 @@ function startWorkout(workout) {
   navigateTo('/workoutSession');
 }
 
+/**
+ * Appends exercise details to the workout session section.
+ *
+ * @param {Array} exerciseDetails - An array containing the exercise name and description.
+ */
 function appendExerciseDetails(exerciseDetails) {
   global.exerciseName.textContent = '';
   global.exerciseDesc.textContent = '';
@@ -409,6 +480,12 @@ function appendExerciseDetails(exerciseDetails) {
   global.workoutSessionSection.append(exerciseSession);
 }
 
+/**
+ * Starts a countdown timer.
+ *
+ * @param {number} duration - The duration of the countdown in seconds.
+ * @param {Function} callback - The function to call when the countdown reaches zero.
+ */
 function startCountdown(duration, callback) {
   let remainingTime = duration;
   let countdownInterval;
@@ -432,6 +509,12 @@ function startCountdown(duration, callback) {
   updateCountdown();
 }
 
+/**
+ * @function calculateExerciseDifficulty
+ * @description Function to calculate the difficulty level of an exercise based on its duration
+ * @param {number} exerciseDuration - The duration of the exercise in seconds
+ * @returns {string} - The difficulty level of the exercise ('Easy', 'Medium', or 'Hard')
+ */
 function calculateExerciseDifficulty(exerciseDuration) {
   let difficultyLevel;
   if (exerciseDuration <= 45) {
@@ -444,6 +527,12 @@ function calculateExerciseDifficulty(exerciseDuration) {
   return difficultyLevel;
 }
 
+/**
+ * @function viewWorkoutPageExerciseList
+ * @description Function to create an exercise list for a given workout
+ * @param {Object} workout - The workout object containing exercise details
+ * @returns {HTMLElement} - An unordered list element containing the exercise details
+ */
 function viewWorkoutPageExerciseList(workout) {
   const workoutDetails = global.workoutExerciseDetails.filter(
     (details) => details.WORKOUT_ID === workout.WORKOUT_ID,
@@ -471,6 +560,11 @@ function viewWorkoutPageExerciseList(workout) {
   return exerciseList;
 }
 
+/**
+ * @function viewWorkout
+ * @description Function to display the details of a selected workout
+ * @param {Object} workout - The workout object to be displayed
+ */
 // Function to view a selected workout
 function viewWorkout(workout) {
   global.viewWorkoutButtons.innerHTML = '';
@@ -511,7 +605,11 @@ function viewWorkout(workout) {
   navigateTo('/viewWorkout');
 }
 
-// Function to show all workouts
+/**
+ * @function showAllWorkouts
+ * @description Function to display all available workouts
+ * @param {Array} workouts - An array of workout objects
+ */
 function showAllWorkouts(workouts) {
   for (const workout of workouts) {
     const workoutTile = document.createElement('section');
@@ -524,7 +622,11 @@ function showAllWorkouts(workouts) {
   }
 }
 
-// Function to fetch workouts
+/**
+ * @function fetchWorkouts
+ * @description Function to fetch workouts from the server
+ * @param {string} id - The user ID for which to fetch workouts
+ */
 async function fetchWorkouts(id) {
   const response = await fetch(`data/profiles/workouts/${id}`);
   let workouts;
@@ -543,10 +645,15 @@ async function fetchWorkouts(id) {
     global.fetchWorkoutCheck = true;
     console.log(workouts, id, 'logged in');
   } else {
-    console.log('You have to be online', response);
+    global.noInternet.classList.remove('hide');
   }
 }
 
+/**
+ * @function fetchWorkouts
+ * @description Function to fetch workouts from the server
+ * @param {string} id - The user ID for which to fetch workouts
+ */
 // Function to get the new workout form
 function getNewWorkoutForm() {
   const workoutExercises = Array.from(global.selectedExercises.children).map((exercise) => {
@@ -568,7 +675,11 @@ function getNewWorkoutForm() {
   return workoutExercises;
 }
 
-// Function to verify the new workout
+/**
+ * @function verifyNewWorkout
+ * @description Function to verify the new workout form data
+ * @returns {Object|null} - An object containing the workout details, or null if the form is incomplete
+ */
 function verifyNewWorkout() {
   const workoutExercises = getNewWorkoutForm();
 
@@ -595,7 +706,12 @@ function verifyNewWorkout() {
   }
 }
 
-// Function to create a new workout
+/**
+ * @function saveWorkout
+ * @description Function to save a new or edited workout
+ * @param {string} id - The user ID for which to save the workout
+ * @param {Object} payload - An object containing the workout details
+ */
 async function saveWorkout(id, payload) {
   // Set editWorkoutID explicitly
   payload.editWorkoutID = global.editWorkoutID || null;
@@ -613,12 +729,17 @@ async function saveWorkout(id, payload) {
       navigateTo('/home');
       global.editWorkoutID = null;
     } else {
-      console.log('failed to create workout', response);
+      global.noInternet.classList.remove('hide');
     }
   }
 }
 
-// Function to edit a workout
+
+/**
+ * @function editWorkout
+ * @description Function to edit an existing workout
+ * @param {Object} workout - The workout object to be edited
+ */
 function editWorkout(workout) {
   global.editWorkoutID = workout.WORKOUT_ID;
   global.workoutName.value = workout.WORKOUT_NAME;
@@ -639,6 +760,11 @@ function editWorkout(workout) {
   navigateTo('/createWorkout');
 }
 
+/**
+ * @function deleteWorkout
+ * @description Function to delete a workout
+ * @param {string} workoutId - The ID of the workout to be deleted
+ */
 async function deleteWorkout(workoutId) {
   const response = await fetch(`data/profiles/workouts/${global.currentUserId}/${workoutId}`, {
     method: 'DELETE',
@@ -649,11 +775,15 @@ async function deleteWorkout(workoutId) {
     navigateTo('/home');
     location.reload(true);
   } else {
-    console.log('failed to delete workout', response);
+    global.noInternet.classList.remove('hide');
   }
 }
 
-// Function to show the profile list
+/**
+ * @function showProfileList
+ * @description Function to display a list of user profiles
+ * @param {Array} profiles - An array of user profile objects
+ */
 function showProfileList(profiles) {
   for (const profile of profiles) {
     const btn = document.createElement('button');
@@ -669,7 +799,11 @@ function showProfileList(profiles) {
   }
 }
 
-// Function to verify input
+/**
+ * @function verifyInput
+ * @description Function to verify the input value for creating a new profile
+ * @returns {boolean} - True if the input value is valid, false otherwise
+ */
 function verifyInput() {
   if (global.profileName.value === '') {
     return false;
@@ -677,7 +811,10 @@ function verifyInput() {
   return true;
 }
 
-// Function to create a new profile
+/**
+ * @function createProfile
+ * @description Function to create a new user profile
+ */
 async function createProfile() {
   if (verifyInput()) {
     const payload = { username: global.profileName.value };
@@ -701,35 +838,49 @@ async function createProfile() {
     }
   } else {
     global.profileError.classList.remove('hide');
-    global.profileName.focus();
   }
 }
 
-// Function to fetch all profiles
+/**
+ * @function fetchAllProfiles
+ * @description Function to fetch all user profiles from the server
+ */
 async function fetchAllProfiles() {
   const response = await fetch('data/profiles');
   let profiles;
   if (response.ok) {
     profiles = await response.json();
   } else {
-    console.log('failed to load profiles', response);
+    global.noInternet.classList.remove('hide');
   }
   showProfileList(profiles);
   global.profileArray = profiles;
   console.log(global.profileArray, 'all profiles');
 }
 
-// Function to show navigation bar if a user is logged in
+/**
+ * @function fetchAllProfiles
+ * @description Function to fetch all user profiles from the server
+ */
 function showNavBar() {
   global.navBar.classList.remove('hide');
+  global.navBar.classList.add('navShow');
 }
 
-// Function to log out
+/**
+ * @function logOut
+ * @description Function to log out the current user
+ */
 function logOut() {
   localStorage.removeItem('currentUserId');
 }
 
-// Function to warn the user before reloading
+/**
+ * @function warnBeforeReload
+ * @description Function to warn the user before reloading the page
+ * @param {Event} event - The beforeunload event object
+ * @returns {string} - A message to be displayed in the confirmation dialog
+ */
 function warnBeforeReload(event) {
   const currentRoute = location.pathname;
   if (currentRoute === '/viewWorkout' || currentRoute === '/workoutSession' || currentRoute === '/createWorkout') {
@@ -740,7 +891,10 @@ function warnBeforeReload(event) {
 }
 
 
-// Function to prepare handles
+/**
+ * @function prepareHandles
+ * @description Function to prepare handles for DOM elements
+ */
 function prepareHandles() {
   global.showNewWorkoutBtn = document.querySelector('.showNewWorkout');
   global.workoutName = document.querySelector('#workoutName');
@@ -779,9 +933,14 @@ function prepareHandles() {
   global.timerSection = document.querySelector('#timerSection');
   global.timerValue = document.querySelector('.timerValue');
   global.timerLabel = document.querySelector('.timerLabel');
+
+  global.noInternet = document.querySelector('.noInternet');
 }
 
-// Function to add event listeners
+/**
+ * @function addEventListeners
+ * @description Function to add event listeners
+ */
 function addEventListeners() {
   document.body.addEventListener('click', (e) => {
     if (e.target.matches('[data-link]')) {
@@ -811,7 +970,10 @@ function addEventListeners() {
 // Event listener for popstate event
 window.addEventListener('popstate', router);
 
-// Function to be called when the page is loaded
+/**
+ * @function pageLoaded
+ * @description Function to be called when the page is loaded
+ */
 function pageLoaded() {
   router();
   prepareHandles();

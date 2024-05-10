@@ -4,21 +4,22 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 20px; /* Adjust this value to make the text bigger or smaller */
-    color: white; /* Change the text color to white */
-    background-color: #1a1a1a; /* Change the background color to a dark shade of black */
-    font-family: sans-serif; /* Apply the Nike font to all text */
+    font-size: 20px;
+    color: #7A7A7A;
+    background-color: #FAFAFA; /* Change the background color to off-white */
+    font-family: sans-serif;
 }
 
 header {
-    font-size: 2em; /* Make the title text bigger */
-    font-family: "Migae", sans-serif; /* Apply the Migae font to the header */
-    border-bottom: 4px solid blue; /* Add a thicker blue line under the header */
+    font-size: 2em;
+    font-family: "Migae", sans-serif;
+    border-bottom: 4px solid blue;
+    color: #333333;
 }
 
 .quote {
-    font-size: 1.5em; /* Make the quote text bigger */
-    margin-top: 20px; /* Add space between the title and the quote */
+    font-size: 1.5em;
+    margin-top: 20px;
 }
 
 #workout_demo {
@@ -27,12 +28,16 @@ header {
 }
 
 button {
-    font-size: 1.5em; /* Adjust this value to change the size of the button text */
-    padding: 10px 20px; /* Adjust these values to change the padding inside the button */
-    margin: 10px; /* Adjust this value to change the space around the buttons */
-    background-color: blue; /* Change the background color of the buttons to blue */
-    color: white; /* Change the text color of the buttons to white */
-    border-radius: 10px; /* Add curved edges to the buttons */
+    font-size: 1.5em;
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #4FC3F7; /* Change the background color of the buttons to light blue */
+    color: white;
+    border-radius: 10px;
+}
+
+button:first-child {
+    margin-right: 5px; /* Add space between the buttons by setting the right margin on the first button */
 }
 
 .hide{
@@ -59,17 +64,17 @@ select, label{
 
 .exerciseList{
     width: 100%;
-    height: 300px; /* Adjust the height as needed */
-    overflow: auto; /* Enable scrolling */
-    border: 1px solid #ccc; /* Add border for visual clarity */
+    height: 300px;
+    overflow: auto;
+    border: 1px solid #ccc;
 }
 
 .removeBtn{
     background-color: red;
     color: white;
-    border-radius: 10px;
-    padding: 5px 10px;
-    margin: 5px;
+    border-radius: 5px;
+    padding: 1px 5px;
+    margin: 2px;
 }
 
 #timerSection {
@@ -78,34 +83,25 @@ select, label{
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: black;
-    background-color: white;
+    color: #333333;
+    background-color: #4FC3F7;
     border-radius: 50%;
     width: 200px;
     height: 200px;
     font-size: 20px;
-    margin: auto; /* Add this line to center the section */
+    margin: auto;
     font-size: 1.5em;
 }
 
-
-.progressBar {
-    background-color: #fefefe;
-    border-radius: 3px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    margin: 15px;
-    height: 30px;
-    width: 500px;
-    max-width: 100%;
+.navShow{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: #333;
+    color: #FFFFFF;
+    padding: 10px;
 }
 
-.progress {
-    background: #007bff;
-    background: -webkit-linear-gradient(to bottom, #007bff, #0056b3);
-    background: linear-gradient(to bottom, #007bff, #0056b3);
-    border-radius: 3px;
-    height: 30px;
-    width: 0;
-    transition: width 0.5s ease-in;
+.groupedExercises{
+    border: 1px solid #4FC3F7;
 }
-

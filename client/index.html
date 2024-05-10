@@ -9,9 +9,11 @@
 <body>
     <header>HevyHIITer</header>
     <nav class="nav hide">
-        <a href="/home" class="navLink" data-link><button class="homeBtn">Your Workouts</button></a>
+        <a href="/home" class="navLink" data-link><button class="homeBtn">Home</button></a>
         <a href="/" data-link><button class="logoutBtn">Log Out</button></a>
     </nav>
+
+    <p class="noInternet hide">Internet Connection is required. Please reload</p>
 
     <section id="home" class="homeSec page hide">
         <a href="/createWorkout" data-link><button class="showNewWorkout">Create New Workout</button></a>
@@ -34,11 +36,11 @@
         <p class="incompleteFormError hide">Sorry! Exercise Time and Rest Time inputs must be between 1 and 60.</p>
         <section class="space"></section>
 
-        <button id="clearExercises">Clear Exercises</button>
+        <button id="clearExercises" class="workoutCreation">Clear Exercises</button>
+        <button id="saveWorkoutBtn" class="workoutCreation">Save Workout</button>
         <section class="selectedExercises">
         </section>
 
-        <h2>Add Exercises</h2>
         <label for="muscleFilter">Filter by muscles:</label>
         <select id="muscleFilter">
             <option value="all_muscles">All Exercises</option>
@@ -59,13 +61,11 @@
         <section class="space"></section>
         <section class="exerciseList">
         </section>
-
-        <button id="saveWorkoutBtn">Save Workout</button>
     </section>
 
     <section id="login" class="profileSec page hide">
         <p class="quote">Transform Your Fitness Journey</p>
-        <p class="quote">Craft personalised HIIT workout tailored to your goals, accompanied by dynamic exercises and empowering progress tracking, to reach your fitness peak!</p>
+        <p class="quote">Craft personalised HIIT workout tailored to your goals, accompanied by dynamic exercises to reach your fitness peak!</p>
         <section class="profileInput">
             <input type="text" id="profileName" placeholder="Enter Username" required>
         </section>

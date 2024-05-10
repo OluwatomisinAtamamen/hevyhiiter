@@ -1,7 +1,7 @@
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 
-// Initialize the database connection
+
 async function init() {
   const db = await open({
     filename: './database.sqlite',
@@ -82,6 +82,7 @@ export async function addWorkout(id, workoutName, workoutDesc, workoutExercises,
   }
 }
 
+// delete workout from database
 export async function deleteWorkoutFromDatabase(userId, workoutId) {
   const db = await dbConn;
   const result = await db.run('DELETE FROM WORKOUT WHERE PROFILE_ID = ? AND WORKOUT_ID = ?', [userId, workoutId]);
