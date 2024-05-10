@@ -109,46 +109,30 @@ Another challenge was implementing the timer functionality for workout sessions,
 - Incorporate visual aids, such as GIFs or images, to enhance exercise demonstrations and improve usability.
 
 ## Credits and Acknowledgments
-
 ## AI
-REMOVE ME: Detail your use of AI, listing of the prompts you used, and whether the results formed or inspired part of your final submission and where we can see this (and if not, why not?). You may wish to group prompts into headings/sections - use markdown in any way that it helps you communicate your use of AI. 
 
-### Prompts to develop XYZ (exmaple)
-A sequence of prompts helped me develop this feature:
+## Acknowledgments
 
->  this is an example prompt given to a chatbot
-The response was proved useless because the prompt wasn't specific enough about XYZ, so:
+AI played a significant role in the development of this project, specifically through the use of GitHub Copilot and ChatGPT. GitHub Copilot provided valuable assistance with auto-completions, writing SQL scripts, and generating comments, enhancing both efficiency and code quality. ChatGPT was particularly helpful in cleaning and refining SQL queries for database operations.
 
->  this is an example prompt given to a chatbot detailing XYZ
-The response was better so I could speifically ask about QRST
+### AI Usage Examples
 
->  how can I integrate QRST here?
-The suggestion worked with minor modification.
+#### Identifying Bugs
+>  Cannot read properties of null (reading 'classList')
+One instance where AI was instrumental was in resolving a bug related to DOM loading. When encountering the error "Cannot read properties of null (reading 'classList')", GitHub Copilot assisted in diagnosing the issue by suggesting potential causes, leading to the realization that the DOM wasn't fully loaded. This enabled a quicker resolution of the bug.
 
-### Prompts to develop GHIJ (exmaple)
-For the GHIJ feature I ...
+#### Git Management
+>  how to remove node_modules from github repo
+After inadvertently committing the entire node_modules folder, AI, through GitHub Copilot, guided in using Git commands to rectify the situation. This experience not only resolved the immediate issue but also improved proficiency with Git commands for future repository management.
 
->  this is an example prompt given to a chatbot
-words words words etc.
+#### Troubleshooting DOM Manipulation
+>  why is an element re appending to my page
+In another scenario, ChatGPT aided in identifying why an element was reappending to the page repeatedly. Through the generated response, it became apparent that the section was not being cleared before appending a new element. This insight was crucial in optimizing the code to prevent unnecessary DOM manipulation.
 
-
-REST - The duration of the rest period before moving on to the next exercise.
+Utilizing AI technologies like GitHub Copilot and ChatGPT significantly contributed to the development process, streamlining tasks, enhancing code quality, and fostering learning opportunities in various aspects of software development and troubleshooting.
 
 
-Users cannot create workouts without internet access
-if a user logs out, they need internet access to log back in
+Exercises Infomation - HIIT Workouts For Men | HIIT Workouts For Women | Free HIIT Workouts | HIIT Training Workouts. (2015, March 24). Hiitacademy.com. https://hiitacademy.com/hiit-workouts/
 
-
-
-
-
-please use my code which you already have to supplement my points. overview- we were asked to create an customisable HIIT workout app with vanilla js, html and css as the frontend, express.js and sqlite as the backend and database respectively. My design was an app where users, who get sample workouts once they join, can create, edit and delete their workouts. The workouts consisted of group of exercises plus rest times. The core features- create workout, edit workout, delete workout, the workouts come with exercises which have a databasee of instructions and muscle group in my database. A user can search my database of exercises in the create workout page, they can also search their list of workouts. users can create multiple profiles that persist because of the sqlite database. I decided to allow users have access to sample workouts upon log in so that they would be able to use the app, once they're logged in and offline for working out. The exercises come with time based difficulty too. 
-
-Installation is just npm i which would install the sqlite, sqlite3 and express dependencies that I am using. You can check my package.json for that. For usage, claude, use my code to write up something. Technologies used; like I mentioned at the start, I used html and css for the structure of my app, and then vanilla javascript foor the functionality and manipulation of dom elements. I used express.js and nodejs to create a server and serve my client. I then sqlite for the database, I am directly quering the database and not using any ORMs. Design decisons; I decided to use code based routing as this was my first time building a single page app, it was easy for me to implement as I was hiding sections and changing the route which had always beemn my goal from tyhe start. I also decided to go for a global varible object in order to maintain the whole state of my app. that had side effects that I have now learnt from.
-
-My coding convention was to use camelcase for naming my variables, functions, classses amd ids. I also favoured functional programming; this is eveident in my use of functions instead of classes or template to build sections of some of the pages. my database schema was designed with future maintainability in mind, more exercises can be added and descriptions corrected. i have two sample users in the databse but they do not have any workouts as they were extensively used for testing. Any new user automatically gets a sample workout though. 
-
-I had challenges modularisng my code properly because I postponed all of it to the end and because I am using a centarlised global object variable. This project has been a really good learning experience for me in teaching me to think of how a favourable data structure might make it easier to manipulate DOM elements. I had challenges trying to implement the timer functionality (refer to my code claude) Future enhancements - I plan to work on the pause and resume functionality of the timers, restructure my database so I can add history logs of individual users, and visual gifs or images of the exercises to improve usabiilty.
-
-I would include credits and acknowledgement myself
+‌
 
