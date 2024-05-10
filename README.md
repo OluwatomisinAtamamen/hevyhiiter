@@ -33,6 +33,23 @@ The app supports multiple user profiles, allowing different users to create and 
 
 The app includes a comprehensive database of exercises, each with a name, description, and associated muscle group(s). Exercises are also categorized by difficulty level based on their duration.
 
+## API Design
+
+The application follows a RESTful API design, implementing CRUD (Create, Read, Update, Delete) operations. The API endpoints are used to interact with the SQLite database, allowing data retrieval, creation, modification, and deletion.
+
+### Endpoints
+
+- `GET /data/profiles`: Retrieves all user profiles from the database.
+- `POST /data/profiles`: Creates a new user profile.
+- `GET /data/profiles/workouts/:id`: Retrieves all workouts for a specific user profile.
+- `POST /data/profiles/workouts/:id`: Creates a new workout for a user profile or updates an existing workout.
+- `DELETE /data/profiles/workouts/:userId/:workoutId`: Deletes a specific workout from a user profile.
+- `GET /data/exercises/all`: Retrieves all exercises from the database.
+- `GET /data/exercises/by-muscle/:muscleName`: Retrieves exercises for a specific muscle group.
+- `GET /*`: Serves the client-side application for all other routes.
+
+All API endpoints are prefixed with `/data`, following a consistent naming convention.
+
 ## Installation
 
 1. Clone the repository: `git clone https://github.com/OluwatomisinAtamamen/hevyhiiter.git`
