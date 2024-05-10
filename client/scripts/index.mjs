@@ -1,5 +1,4 @@
 import * as sample from './sampleWorkouts.mjs';
-
 // Global Variable
 const global = {
   navBar: document.querySelector('.nav'),
@@ -299,69 +298,69 @@ async function fetchExercises() {
 }
 
 /**
- * @function runTimer
- * @description Function to run a timer for a specified duration
- * @param {number} duration - The duration of the timer in seconds
- * @param {boolean} isExercise - Flag indicating if the timer is for an exercise or rest period
- * @param {Function} callback - Callback function to be called when the timer finishes
- * @param {Function} restCallback - Callback function to be called when the timer finishes, specifically for rest periods
- * @returns {{pauseTimer: Function, resumeTimer: Function}} - Object containing functions to pause and resume the timer
+ * Timer class for managing exercise and rest intervals.
  */
-function runTimer(duration, isExercise, callback, restCallback) {
-  let remainingTime = duration;
-  let timerInterval;
-  const isRestPeriod = false;
+class Timer {
+  /**
+     * Creates a new Timer.
+     * @param {number} duration - The duration of the timer in seconds.
+     * @param {boolean} isExercise - Whether the timer is for an exercise (true) or rest (false).
+     * @param {function} callback - The function to call when the timer reaches zero.
+     */
+  constructor(duration, isExercise, callback) {
+    this.duration = duration;
+    this.isExercise = isExercise;
+    this.callback = callback;
+    this.remainingTime = duration;
+    this.timerInterval = null;
+    this.isPaused = false;
+  }
 
-  function updateTimer() {
+  updateTimer() {
     global.timerSection.classList.remove('hide');
-    global.timerValue.textContent = remainingTime + ' secs';
-    global.timerLabel.textContent = isExercise ? 'Exercise' : 'Rest';
+    global.timerValue.textContent = this.remainingTime + ' secs';
+    global.timerLabel.textContent = this.isExercise ? 'Exercise' : 'Rest';
+  }
 
-    timerInterval = setInterval(() => {
-      remainingTime--;
-      global.timerValue.textContent = remainingTime + ' secs';
 
-      if (remainingTime === 0) {
-        clearInterval(timerInterval);
-        if (isRestPeriod) {
-          restCallback();
-        } else {
-          callback();
-        }
+  startTimer() {
+    this.updateTimer();
+    this.timerInterval = setInterval(() => {
+      this.remainingTime--;
+      global.timerValue.textContent = this.remainingTime + ' secs';
+
+      if (this.remainingTime === 0) {
+        this.stopTimer();
+        this.callback();
       }
     }, 1000);
   }
 
-  const pauseTimer = () => {
-    clearInterval(timerInterval);
-  };
 
-  const resumeTimer = () => {
-    timerInterval = setInterval(() => {
-      remainingTime--;
-      global.timerValue.textContent = remainingTime + ' secs';
+  pauseTimer() {
+    clearInterval(this.timerInterval);
+    this.isPaused = true;
+  }
 
-      if (remainingTime === 0) {
-        clearInterval(timerInterval);
-        if (isRestPeriod) {
-          restCallback();
-        } else {
-          callback();
-        }
-      }
-    }, 1000);
-  };
 
-  updateTimer();
+  resumeTimer() {
+    if (this.isPaused) {
+      this.startTimer();
+      this.isPaused = false;
+    }
+  }
 
-  return { pauseTimer, resumeTimer };
+
+  stopTimer() {
+    clearInterval(this.timerInterval);
+  }
 }
 
+
 /**
- * @function startCountdown
+ * @function startWorkout
  * @description Function to start a countdown timer
- * @param {number} duration - The duration of the countdown in seconds
- * @param {Function} callback - Callback function to be called when the countdown finishes
+ * @param {Object} workout - The workout object containing exercise details
  */
 function startWorkout(workout) {
   const workoutDetails = global.workoutExerciseDetails.filter(
@@ -397,13 +396,14 @@ function startWorkout(workout) {
   resumeButton.textContent = 'Resume';
   resumeButton.classList.add('resume-timer');
 
-  // TODO Fix the pause and resume timerControlsSection.append(pauseButton, resumeButton);
+  timerControlsSection.append(pauseButton, resumeButton);
 
   global.workoutSessionSection.append(
     workoutSessionName,
     workoutSessionDesc,
     global.timerSection,
     global.exerciseDesc,
+    timerControlsSection,
   );
 
   // Start countdown before the first exercise
@@ -421,19 +421,19 @@ function startWorkout(workout) {
 
       global.exerciseSessionArray = [EXERCISE_NAME, DESCRIPTION];
       appendExerciseDetails(global.exerciseSessionArray);
-      const exerciseTimer = runTimer(
+
+      // Start the exercise timer
+      const exerciseTimer = new Timer(
         EXERCISE_DURATION,
         true,
         () => handleRestPeriod(REST_DURATION),
         handleNextExercise,
       );
-
-      const pauseExerciseTimer = exerciseTimer.pauseTimer;
-      const resumeExerciseTimer = exerciseTimer.resumeTimer;
+      exerciseTimer.startTimer();
 
       // Add event listeners for pause and resume buttons
-      pauseButton.addEventListener('click', pauseExerciseTimer);
-      resumeButton.addEventListener('click', resumeExerciseTimer);
+      pauseButton.addEventListener('click', exerciseTimer.pauseTimer.bind(exerciseTimer));
+      resumeButton.addEventListener('click', exerciseTimer.resumeTimer.bind(exerciseTimer));
 
       currentExerciseIndex++;
     } else {
@@ -443,19 +443,13 @@ function startWorkout(workout) {
   };
 
   const handleRestPeriod = (restDuration) => {
-    const restTimer = runTimer(
-      restDuration,
-      false,
-      handleNextExercise,
-      null,
-    );
-
-    const pauseRestTimer = restTimer.pauseTimer;
-    const resumeRestTimer = restTimer.resumeTimer;
+    // Start the rest timer
+    const restTimer = new Timer(restDuration, false, handleNextExercise);
+    restTimer.startTimer();
 
     // Add event listeners for pause and resume buttons
-    pauseButton.addEventListener('click', pauseRestTimer);
-    resumeButton.addEventListener('click', resumeRestTimer);
+    pauseButton.addEventListener('click', restTimer.pauseTimer.bind(restTimer));
+    resumeButton.addEventListener('click', restTimer.resumeTimer.bind(restTimer));
   };
 
   navigateTo('/workoutSession');
