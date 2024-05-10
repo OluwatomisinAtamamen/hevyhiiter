@@ -247,23 +247,27 @@ async function fetchExercises() {
 }
 
 
-function runTimer(duration, isExercise, callback) {
+function runTimer(duration, isExercise, callback, restCallback) {
   let remainingTime = duration;
   let timerInterval;
+  const isRestPeriod = false;
 
   function updateTimer() {
     global.timerSection.classList.remove('hide');
-    global.timerValue.textContent = remainingTime;
+    global.timerValue.textContent = remainingTime + ' secs';
     global.timerLabel.textContent = isExercise ? 'Exercise' : 'Rest';
 
     timerInterval = setInterval(() => {
       remainingTime--;
-      global.timerValue.textContent = remainingTime;
+      global.timerValue.textContent = remainingTime + ' secs';
 
       if (remainingTime === 0) {
         clearInterval(timerInterval);
-        global.timerSection.classList.add('hide');
-        callback();
+        if (isRestPeriod) {
+          restCallback();
+        } else {
+          callback();
+        }
       }
     }, 1000);
   }
@@ -275,12 +279,15 @@ function runTimer(duration, isExercise, callback) {
   const resumeTimer = () => {
     timerInterval = setInterval(() => {
       remainingTime--;
-      global.timerValue.textContent = remainingTime;
+      global.timerValue.textContent = remainingTime + ' secs';
 
       if (remainingTime === 0) {
         clearInterval(timerInterval);
-        global.timerSection.classList.add('hide');
-        callback();
+        if (isRestPeriod) {
+          restCallback();
+        } else {
+          callback();
+        }
       }
     }, 1000);
   };
@@ -292,28 +299,75 @@ function runTimer(duration, isExercise, callback) {
 
 function startWorkout(workout) {
   const workoutDetails = global.workoutExerciseDetails.filter(
-    (details) => details.WORKOUT_ID === workout.WORKOUT_ID);
+    (details) => details.WORKOUT_ID === workout.WORKOUT_ID,
+  );
   console.log(workoutDetails, 'workout details');
 
   let currentExerciseIndex = 0;
 
+  // Clear the workout session section
+  global.workoutSessionSection.innerHTML = '';
+
+  // Create elements for the workout session
+  const workoutSessionName = document.createElement('section');
+  workoutSessionName.classList.add('workoutSessionName');
+  workoutSessionName.textContent = workout.WORKOUT_NAME;
+
+  global.exerciseDesc = document.createElement('p');
+  global.exerciseName = document.createElement('h3');
+
+  const workoutSessionDesc = document.createElement('section');
+  workoutSessionDesc.classList.add('workoutSessionDesc');
+  workoutSessionDesc.textContent = workout.DESCRIPTION;
+
+  const timerControlsSection = document.createElement('section');
+  timerControlsSection.classList.add('timerControls');
+
+  const pauseButton = document.createElement('button');
+  pauseButton.textContent = 'Pause';
+  pauseButton.classList.add('pause-timer');
+
+  const resumeButton = document.createElement('button');
+  resumeButton.textContent = 'Resume';
+  resumeButton.classList.add('resume-timer');
+
+  // TODO Fix the pause and resume timerControlsSection.append(pauseButton, resumeButton);
+
+  global.workoutSessionSection.append(
+    workoutSessionName,
+    workoutSessionDesc,
+    global.timerSection,
+    global.exerciseDesc,
+  );
+
+  // Start countdown before the first exercise
+  startCountdown(5, () => {
+    handleNextExercise();
+  });
+
   const handleNextExercise = () => {
     if (currentExerciseIndex < workoutDetails.length) {
-      const { EXERCISE_DURATION } = workoutDetails[currentExerciseIndex]; // Remove REST_DURATION since it's not used
+      const { EXERCISE_NAME, EXERCISE_DURATION, REST_DURATION, DESCRIPTION } =
+        workoutDetails[currentExerciseIndex];
 
-      const exerciseTimer = runTimer(EXERCISE_DURATION, true, handleRestPeriod); // Only create exerciseTimer
+      // Update the timer label with the exercise name
+      global.timerLabel.textContent = EXERCISE_NAME;
+
+      global.exerciseSessionArray = [EXERCISE_NAME, DESCRIPTION];
+      appendExerciseDetails(global.exerciseSessionArray);
+      const exerciseTimer = runTimer(
+        EXERCISE_DURATION,
+        true,
+        () => handleRestPeriod(REST_DURATION),
+        handleNextExercise,
+      );
 
       const pauseExerciseTimer = exerciseTimer.pauseTimer;
       const resumeExerciseTimer = exerciseTimer.resumeTimer;
 
       // Add event listeners for pause and resume buttons
-      document.addEventListener('click', (e) => {
-        if (e.target.matches('.pause-timer')) {
-          pauseExerciseTimer();
-        } else if (e.target.matches('.resume-timer')) {
-          resumeExerciseTimer();
-        }
-      });
+      pauseButton.addEventListener('click', pauseExerciseTimer);
+      resumeButton.addEventListener('click', resumeExerciseTimer);
 
       currentExerciseIndex++;
     } else {
@@ -322,14 +376,72 @@ function startWorkout(workout) {
     }
   };
 
+  const handleRestPeriod = (restDuration) => {
+    const restTimer = runTimer(
+      restDuration,
+      false,
+      handleNextExercise,
+      null,
+    );
 
-  const handleRestPeriod = () => {
-    handleNextExercise();
+    const pauseRestTimer = restTimer.pauseTimer;
+    const resumeRestTimer = restTimer.resumeTimer;
+
+    // Add event listeners for pause and resume buttons
+    pauseButton.addEventListener('click', pauseRestTimer);
+    resumeButton.addEventListener('click', resumeRestTimer);
   };
 
-  handleNextExercise();
-
   navigateTo('/workoutSession');
+}
+
+function appendExerciseDetails(exerciseDetails) {
+  global.exerciseName.textContent = '';
+  global.exerciseDesc.textContent = '';
+  const exerciseSession = document.createElement('section');
+
+  exerciseSession.innerHTML = '';
+
+  global.exerciseName.textContent = exerciseDetails[0];
+  global.exerciseDesc.textContent = exerciseDetails[1];
+
+  exerciseSession.append(global.exerciseName, global.exerciseDesc);
+  global.workoutSessionSection.append(exerciseSession);
+}
+
+function startCountdown(duration, callback) {
+  let remainingTime = duration;
+  let countdownInterval;
+
+  function updateCountdown() {
+    global.timerSection.classList.remove('hide');
+    global.timerValue.textContent = remainingTime + ' secs';
+    global.timerLabel.textContent = 'Get Ready';
+
+    countdownInterval = setInterval(() => {
+      remainingTime--;
+      global.timerValue.textContent = remainingTime + ' secs';
+
+      if (remainingTime === 0) {
+        clearInterval(countdownInterval);
+        callback();
+      }
+    }, 1000);
+  }
+
+  updateCountdown();
+}
+
+function calculateExerciseDifficulty(exerciseDuration) {
+  let difficultyLevel;
+  if (exerciseDuration <= 45) {
+    difficultyLevel = 'Easy';
+  } else if (exerciseDuration >= 46 && exerciseDuration <= 60) {
+    difficultyLevel = 'Medium';
+  } else if (exerciseDuration > 60) {
+    difficultyLevel = 'Hard';
+  }
+  return difficultyLevel;
 }
 
 function viewWorkoutPageExerciseList(workout) {
@@ -344,12 +456,15 @@ function viewWorkoutPageExerciseList(workout) {
     const exerciseName = document.createElement('p');
     const exerciseDuration = document.createElement('p');
     const restDuration = document.createElement('p');
+    const exerciseDifficulty = document.createElement('p');
+    const difficultyLevel = calculateExerciseDifficulty(exercise.EXERCISE_DURATION);
 
     exerciseName.textContent = exercise.EXERCISE_NAME;
     exerciseDuration.textContent = `Exercise Duration: ${exercise.EXERCISE_DURATION} secs`;
     restDuration.textContent = `Rest Duration: ${exercise.REST_DURATION} secs`;
+    exerciseDifficulty.textContent = `Difficulty: ${difficultyLevel}`;
 
-    exerciseItem.append(exerciseName, exerciseDuration, restDuration);
+    exerciseItem.append(exerciseName, exerciseDifficulty, exerciseDuration, restDuration);
     exerciseList.append(exerciseItem);
   }
 
@@ -359,6 +474,7 @@ function viewWorkoutPageExerciseList(workout) {
 // Function to view a selected workout
 function viewWorkout(workout) {
   global.viewWorkoutButtons.innerHTML = '';
+  global.viewWorkoutPage.innerHTML = '';
   console.log(workout);
   global.currentWorkout = workout;
 
@@ -366,6 +482,7 @@ function viewWorkout(workout) {
   const editWorkoutBtn = document.createElement('button');
   const deleteWorkoutBtn = document.createElement('button');
   const exerciseHeading = document.createElement('h3');
+  const totalTime = document.createElement('p');
 
   startWorkoutBtn.textContent = 'Start Workout';
   editWorkoutBtn.textContent = 'Edit Workout';
@@ -373,6 +490,7 @@ function viewWorkout(workout) {
   global.selectedWorkoutName.textContent = workout.WORKOUT_NAME;
   global.selectedWorkoutDesc.textContent = workout.DESCRIPTION;
   exerciseHeading.textContent = 'Exercises';
+  totalTime.textContent = `Total Time: ${workout.WORKOUT_DURATION} secs`;
 
   startWorkoutBtn.addEventListener('click', () => startWorkout(workout));
   editWorkoutBtn.addEventListener('click', () => editWorkout(workout));
@@ -386,6 +504,7 @@ function viewWorkout(workout) {
     global.selectedWorkoutName,
     global.viewWorkoutButtons,
     global.selectedWorkoutDesc,
+    totalTime,
     exerciseHeading,
     viewWorkoutPageExerciseList(workout),
   );

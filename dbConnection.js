@@ -91,7 +91,7 @@ export async function deleteWorkoutFromDatabase(userId, workoutId) {
 // Retrieve all exercises from the database
 export async function sendExercises() {
   const db = await dbConn;
-  const exercises = await db.all("SELECT EXERCISE_NAME FROM EXERCISE WHERE EXERCISE_NAME != 'Rest' ORDER BY EXERCISE_NAME ASC");
+  const exercises = await db.all('SELECT EXERCISE_NAME FROM EXERCISE ORDER BY EXERCISE_NAME ASC');
   return exercises;
 }
 

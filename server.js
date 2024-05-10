@@ -38,7 +38,7 @@ async function postWorkouts(req, res) {
       req.body.totalDuration,
       req.body.editWorkoutID,
     );
-    res.json({ WORKOUT_ID: result.workoutID });
+    res.json({ WORKOUT_ID: result.workoutId });
   } catch (error) {
     console.log('Internal Server Error', error);
   }

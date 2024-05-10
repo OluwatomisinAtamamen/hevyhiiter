@@ -71,3 +71,41 @@ select, label{
     padding: 5px 10px;
     margin: 5px;
 }
+
+#timerSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: black;
+    background-color: white;
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    font-size: 20px;
+    margin: auto; /* Add this line to center the section */
+    font-size: 1.5em;
+}
+
+
+.progressBar {
+    background-color: #fefefe;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    margin: 15px;
+    height: 30px;
+    width: 500px;
+    max-width: 100%;
+}
+
+.progress {
+    background: #007bff;
+    background: -webkit-linear-gradient(to bottom, #007bff, #0056b3);
+    background: linear-gradient(to bottom, #007bff, #0056b3);
+    border-radius: 3px;
+    height: 30px;
+    width: 0;
+    transition: width 0.5s ease-in;
+}
+

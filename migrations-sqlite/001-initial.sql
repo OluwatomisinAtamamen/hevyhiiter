@@ -51,22 +51,20 @@ FOREIGN KEY (EXERCISE_ID) REFERENCES EXERCISE(EXERCISE_ID),
 FOREIGN KEY (MUSCLE_ID) REFERENCES MUSCLE_GROUP(MUSCLE_ID)
 );
 
-INSERT INTO MUSCLE_GROUP (MUSCLE_NAME, DIFFICULTY) VALUES 
-('Legs', 9),
-('Shoulders', 6),
-('Biceps', 4),
-('Abs(Core)', 9),
-('Cardio', 7),
-('Back', 7),
-('Glutes(Butt)', 6),
-('Chest', 6),
-('Triceps', 6);
+INSERT INTO MUSCLE_GROUP (MUSCLE_NAME) VALUES 
+('Legs'),
+('Shoulders'),
+('Biceps'),
+('Abs(Core)'),
+('Cardio'),
+('Back'),
+('Glutes(Butt)'),
+('Chest'),
+('Triceps');
 
 INSERT INTO PROFILE (USERNAME) VALUES
 ('Tomi'),
 ('John');
-
-INSERT INTO EXERCISE (EXERCISE_NAME, EQUIPMENT, DESCRIPTION) VALUES ('Rest', null, 'Take a break.');
 
 INSERT INTO EXERCISE (EXERCISE_NAME, EQUIPMENT, DESCRIPTION) VALUES ('Incline Push Ups', null, 'Begin in the pushup position with your hands elevated on any stable surface higher than the floor.
 Keep your body in a straight line from your shoulders to your toes and keep your abs and butt engaged.
