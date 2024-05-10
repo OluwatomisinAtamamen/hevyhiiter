@@ -76,6 +76,18 @@ All API endpoints are prefixed with `/data`, following a consistent naming conve
 
 ## Design Decisions
 
+One of the core design principles behind this fitness app is to prioritize user safety and provide a seamless experience, especially for beginners. While the app allows for building custom HIIT workouts from scratch, users can only select exercises from a curated database maintained by fitness experts. The decision to restrict exercise creation by users themselves was made for two primary reasons:
+
+### Mitigating Safety Risks
+
+Allowing users to create arbitrary exercises from scratch could potentially lead to unsafe or ineffective workout routines, increasing the risk of injury. By curating a comprehensive database of exercises vetted by professionals, the app ensures that users are engaging in well-designed, low-risk activities.
+
+### Enhancing Usability for Beginners
+
+For users new to fitness or unfamiliar with exercise terminology and proper form, creating exercises from scratch could be a daunting and error-prone task. By providing a carefully curated selection of exercises with clear descriptions and instructions, the app ensures a user-friendly experience, especially for those just starting their fitness journey.
+
+The exercise database is regularly updated and expanded to incorporate a wide variety of activities, catering to diverse fitness levels and preferences. This approach strikes a balance between offering flexibility in workout customization and maintaining a safe, accessible environment for all users.
+
 ### Code-Based Routing
 
 The app utilizes code-based routing to implement a single-page application (SPA) architecture. This approach hides and shows different sections of the app based on the current route, providing a seamless user experience.
