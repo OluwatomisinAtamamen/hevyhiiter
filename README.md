@@ -41,10 +41,12 @@ The app includes a comprehensive database of exercises, each with a name, descri
 
 ## Usage
 
-1. Start the server: `npm start`
-2. Open your web browser and navigate to `http://localhost:8080`
-3. Create a new user profile or log in with an existing one.
-4. Explore the app's features, such as creating, editing, and deleting workouts, as well as initiating workout sessions.
+1. Start by installing necessary dependencies with `npm i`
+2. Start the server: `npm start`
+3. Open your web browser and navigate to `http://localhost:8080`
+4. Create a new user profile or log in with an existing one.
+5. Explore the app's features, such as creating, editing, and deleting workouts, as well as initiating workout sessions.
+   
 
 ## Technologies Used
 
