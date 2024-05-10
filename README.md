@@ -111,8 +111,6 @@ Another challenge was implementing the timer functionality for workout sessions,
 ## Credits and Acknowledgments
 ## AI
 
-## Acknowledgments
-
 AI played a significant role in the development of this project, specifically through the use of GitHub Copilot and ChatGPT. GitHub Copilot provided valuable assistance with auto-completions, writing SQL scripts, and generating comments, enhancing both efficiency and code quality. ChatGPT was particularly helpful in cleaning and refining SQL queries for database operations.
 
 ### AI Usage Examples
