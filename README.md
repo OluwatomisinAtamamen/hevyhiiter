@@ -98,7 +98,7 @@ A global object variable is used to maintain the state of the application, inclu
 
 ### Functional Programming
 
-The codebase favors a functional programming approach, utilizing functions extensively for building and manipulating DOM elements, rather than relying on classes or templates.
+The codebase favors a functional programming approach, utilizing functions extensively for building and manipulating DOM elements.
 
 ### Database Schema
 
@@ -112,11 +112,11 @@ The codebase follows camelCase naming conventions for variables, functions, clas
 
 One of the main challenges faced during development was modularizing the codebase properly. As the project progressed, the decision to postpone modularization resulted in a centralized global object variable, which can potentially lead to maintainability issues in the future.
 
-Another challenge was implementing the timer functionality for workout sessions, particularly the pause and resume features. While the core timer functionality is in place, further improvements are planned to enhance the user experience.
+Another challenge was implementing the timer functionality for workout sessions, particularly the pause and resume features. I decided to use a timer class.
 
 ## Future Enhancements
 
-- Improve the pause and resume functionality for workout session timers.
+- Change the pause and resume class to a function
 - Restructure the database to enable logging individual user workout histories.
 - Incorporate visual aids, such as GIFs or images, to enhance exercise demonstrations and improve usability.
 
