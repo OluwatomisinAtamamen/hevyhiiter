@@ -1,4 +1,3 @@
-# HIIT up2136848
 # HevyHIITer - A Customizable HIIT Workout Web App
 
 HevyHIITer is a web application that allows users to create, edit, and delete customized High-Intensity Interval Training (HIIT) workouts. The app features a frontend built with HTML, CSS, and Vanilla JavaScript, while the backend is powered by Express.js and SQLite.
@@ -121,27 +120,6 @@ Another challenge was implementing the timer functionality for workout sessions,
 - Incorporate visual aids, such as GIFs or images, to enhance exercise demonstrations and improve usability.
 
 ## Credits and Acknowledgments
-## AI
-
-AI played a significant role in the development of this project, specifically through the use of GitHub Copilot and ChatGPT. GitHub Copilot provided valuable assistance with auto-completions, writing SQL scripts, and generating comments, enhancing both efficiency and code quality. ChatGPT was particularly helpful in cleaning and refining SQL queries for database operations.
-
-### AI Usage Examples
-
-#### Identifying Bugs
->  Cannot read properties of null (reading 'classList')
-One instance where AI was instrumental was in resolving a bug related to DOM loading. When encountering the error "Cannot read properties of null (reading 'classList')", GitHub Copilot assisted in diagnosing the issue by suggesting potential causes, leading to the realization that the DOM wasn't fully loaded. This enabled a quicker resolution of the bug.
-
-#### Git Management
->  how to remove node_modules from github repo
-After inadvertently committing the entire node_modules folder, AI, through GitHub Copilot, guided in using Git commands to rectify the situation. This experience not only resolved the immediate issue but also improved proficiency with Git commands for future repository management.
-
-#### Troubleshooting DOM Manipulation
->  why is an element re appending to my page
-In another scenario, ChatGPT aided in identifying why an element was reappending to the page repeatedly. Through the generated response, it became apparent that the section was not being cleared before appending a new element. This insight was crucial in optimizing the code to prevent unnecessary DOM manipulation.
-
-Utilizing AI technologies like GitHub Copilot and ChatGPT significantly contributed to the development process, streamlining tasks, enhancing code quality, and fostering learning opportunities in various aspects of software development and troubleshooting.
-
-
 Exercises Infomation - HIIT Workouts For Men | HIIT Workouts For Women | Free HIIT Workouts | HIIT Training Workouts. (2015, March 24). Hiitacademy.com. https://hiitacademy.com/hiit-workouts/
 
 ‌
